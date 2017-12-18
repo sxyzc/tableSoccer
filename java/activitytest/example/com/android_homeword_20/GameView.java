@@ -15,14 +15,15 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-//import static activitytest.example.com.android_homeword_20.MainActivity.windowWidth;
-//import static activitytest.example.com.android_homeword_20.MainActivity.windowHeight;
-
 // 自定义视图类
 class GameView extends View implements Runnable {
 
+        //定义该视图的宽高
         private int windowHeight;
         private int windowWidth;
+
+        private int halfPlayerHeight;
+        private int halfPlayerWidth;
 
         private RefreshHandler mRedrawHandler = null;
         Ball ball=new Ball();
@@ -158,22 +159,22 @@ class GameView extends View implements Runnable {
                 float dx = logicDx;
 
                 //相减
-                if ((PlayerList.get(0).x + dx > 0) && (PlayerList.get(2).x + dx + 40 < MaxRight)) {
+                if ((PlayerList.get(0).x + dx > 0) && (PlayerList.get(2).x + dx < MaxRight)) {
                         PlayerList.get(0).update(dx);
                         PlayerList.get(1).update(dx);
                         PlayerList.get(2).update(dx);
                 }
-                if ((PlayerList.get(3).x + dx*13/20 > 0)&&(PlayerList.get(6).x + dx*13/20 + 40 < MaxRight)){
-                        PlayerList.get(3).update(dx*13/20);
-                        PlayerList.get(4).update(dx*13/20);
-                        PlayerList.get(5).update(dx*13/20);
-                        PlayerList.get(6).update(dx*13/20);
+                if ((PlayerList.get(3).x + dx*15/27 > 0)&&(PlayerList.get(6).x + dx*15/27 < MaxRight)){
+                        PlayerList.get(3).update(dx*15/27);
+                        PlayerList.get(4).update(dx*15/27);
+                        PlayerList.get(5).update(dx*15/27);
+                        PlayerList.get(6).update(dx*15/27);
                 }
-                if ((PlayerList.get(7).x + dx*4/3 > 0)&&(PlayerList.get(8).x + dx*4/3 + 40 < MaxRight)){
-                        PlayerList.get(7).update(dx*4/3);
-                        PlayerList.get(8).update(dx*4/3);
+                if ((PlayerList.get(7).x + dx*43/27 > 0)&&(PlayerList.get(8).x + dx*43/27 < MaxRight)){
+                        PlayerList.get(7).update(dx*43/27);
+                        PlayerList.get(8).update(dx*43/27);
                 }
-                if((PlayerList.get(9).x + dx > MaxRight/4)&&(PlayerList.get(9).x + dx + 40 < MaxRight*3/4)){
+                if((PlayerList.get(9).x + dx > windowWidth * 3/10)&&(PlayerList.get(9).x + dx < windowWidth * 51/80)){
                         PlayerList.get(9).update(dx);
                 }
         }
@@ -182,107 +183,91 @@ class GameView extends View implements Runnable {
         public GameView(Context context) {
                 super(context);
 
-                //获得手机屏幕的高宽
+                //获得手机屏幕的高宽，初始化游戏界面的宽高
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                 windowHeight = displayMetrics.heightPixels * 4 / 5;
                 windowWidth = displayMetrics.widthPixels * 4 / 5;
 
-                //mPaint.setColor(Color.BLACK);
+                halfPlayerHeight = windowHeight/36/2;
+                halfPlayerWidth = windowWidth/16/2;
+
+            //mPaint.setColor(Color.BLACK);
                 //定义己方球员和对方球员
                 mPlayerList = new ArrayList<>();
                 PlayerList = new ArrayList<>();
-                //Player tem = new Player(80,80);
-                //Player t2 = new Player(300,190);
                 Player t1,t2,t3,t4,t5;
                 Log.d("bbb", "MyView: @@@ "+getHeight()+" "+getWidth());
                 Log.d("bbb", "MyView: ### "+windowWidth+" "+windowHeight);
 
-                //PlayerList.add(new Player(windowWidth-40,windowHeight-40));
-
                 //这里开始设置球员的布局
-                //从上往下数第一行
-            /* t1 = new Player(windowWidth/4, windowHeight/3);
-             t2 = new Player(windowWidth*2/4, windowHeight/3);
-             t3 = new Player(windowWidth*3/4, windowHeight/3);*/
-                //由于目前是按照左上角的点确定的，所以用下面的代码进行初始化
-                t1 = new Player(windowWidth/4 - 20, windowHeight/3);
-                t2 = new Player(windowWidth*2/4 - 20, windowHeight/3);
-                t3 = new Player(windowWidth*3/4 - 20, windowHeight/3);
+                //从上往下数第一行,三名进攻球员的位置
+                t1 = new Player(windowWidth/5 - halfPlayerWidth, windowHeight/3 - halfPlayerHeight);
+                t2 = new Player(windowWidth/2 - halfPlayerWidth, windowHeight/3 - halfPlayerHeight);
+                t3 = new Player(windowWidth*4/5 - halfPlayerWidth, windowHeight/3 - halfPlayerHeight);
                 mPlayerList.add(t1);
                 mPlayerList.add(t2);
                 mPlayerList.add(t3);
 
-                //从上往下数第二行
-             /*t1 = new Player(windowWidth*2/16, windowHeight*17/30);
-             t2 = new Player(windowWidth*6/16, windowHeight*17/30);
-             t3 = new Player(windowWidth*10/16, windowHeight*17/30);
-             t4 = new Player(windowWidth*14/16, windowHeight*17/30);*/
-                //同上
-                t1 = new Player(windowWidth*13/80 - 20, windowHeight*17/30);
-                t2 = new Player(windowWidth*31/80 - 20, windowHeight*17/30);
-                t3 = new Player(windowWidth*49/80 - 20, windowHeight*17/30);
-                t4 = new Player(windowWidth*67/80 - 20, windowHeight*17/30);
+                //从上往下数第二行，四名中场防守球员
+                t1 = new Player(windowWidth*1/8 - halfPlayerWidth, windowHeight*9/16 - halfPlayerHeight);
+                t2 = new Player(windowWidth*3/8 - halfPlayerWidth, windowHeight*9/16 - halfPlayerHeight);
+                t3 = new Player(windowWidth*5/8 - halfPlayerWidth, windowHeight*9/16 - halfPlayerHeight);
+                t4 = new Player(windowWidth*7/8 - halfPlayerWidth, windowHeight*9/16 - halfPlayerHeight);
                 mPlayerList.add(t1);
                 mPlayerList.add(t2);
                 mPlayerList.add(t3);
                 mPlayerList.add(t4);
 
-                //从上往下数第三行
-             /*t1 = new Player(windowWidth/3, windowHeight*4/5);
-             t2 = new Player(windowWidth*2/3, windowHeight*4/5);*/
-                //同理
-                t1 = new Player(windowWidth/3 - 20, windowHeight*4/5);
-                t2 = new Player(windowWidth*2/3 - 20, windowHeight*4/5);
+                //从上往下数第三行，两名防守球员
+                t1 = new Player(windowWidth*3/10 - halfPlayerWidth, windowHeight*13/16 - halfPlayerHeight);
+                t2 = new Player(windowWidth*7/10 - halfPlayerWidth, windowHeight*13/16 - halfPlayerHeight);
                 mPlayerList.add(t1);
                 mPlayerList.add(t2);
 
-                //守门员
-                //t1 = new Player(windowWidth/2, windowHeight*11/12);
-                t1 = new Player(windowWidth/2 - 20, windowHeight*11/12);
+                //从上往下数第四行，一名守门员
+                t1 = new Player(windowWidth/2 - halfPlayerWidth, windowHeight*15/16 - halfPlayerHeight);
                 mPlayerList.add(t1);
-                //mPlayerList.add(tem);
-                //mPlayerList.add(t2);
 
                 //球门对象
-                t1 = new Player(windowWidth/2 - 100, windowHeight - 40);
-                t2 = new Player(windowWidth/2 - 60, windowHeight - 40);
-                t3 = new Player(windowWidth/2 - 20, windowHeight - 40);
-                t4 = new Player(windowWidth/2 + 20, windowHeight - 40);
-                t5 = new Player(windowWidth/2 + 60, windowHeight - 40);
+                t1 = new Player(windowWidth/2 - 5*halfPlayerWidth, windowHeight - halfPlayerHeight);
+                t2 = new Player(windowWidth/2 - 3*halfPlayerWidth, windowHeight - halfPlayerHeight);
+                t3 = new Player(windowWidth/2 - halfPlayerWidth, windowHeight - halfPlayerHeight);
+                t4 = new Player(windowWidth/2 + halfPlayerWidth, windowHeight - halfPlayerHeight);
+                t5 = new Player(windowWidth/2 + 3*halfPlayerWidth, windowHeight - halfPlayerHeight);
                 mPlayerList.add(t1);
                 mPlayerList.add(t2);
                 mPlayerList.add(t3);
                 mPlayerList.add(t4);
                 mPlayerList.add(t5);
 
-                //初始化对面的球员
-                t1 = new Player(windowWidth/4 - 20, windowHeight*2/3);
-                t2 = new Player(windowWidth*2/4 - 20, windowHeight*2/3);
-                t3 = new Player(windowWidth*3/4 - 20, windowHeight*2/3);
+                //初始化对面的球员，方法同初始化自己的球员
+                t1 = new Player(windowWidth/5 - halfPlayerWidth, windowHeight*2/3 - halfPlayerHeight);
+                t2 = new Player(windowWidth/2 - halfPlayerWidth, windowHeight*2/3 - halfPlayerHeight);
+                t3 = new Player(windowWidth*4/5 - halfPlayerWidth, windowHeight*2/3 - halfPlayerHeight);
                 PlayerList.add(t1);
                 PlayerList.add(t2);
                 PlayerList.add(t3);
-                t1 = new Player(windowWidth*13/80 - 20, windowHeight*13/30);
-                t2 = new Player(windowWidth*31/80 - 20, windowHeight*13/30);
-                t3 = new Player(windowWidth*49/80 - 20, windowHeight*13/30);
-                t4 = new Player(windowWidth*67/80 - 20, windowHeight*13/30);
+                t1 = new Player(windowWidth/8 - halfPlayerWidth, windowHeight*7/16 - halfPlayerHeight);
+                t2 = new Player(windowWidth*3/8 - halfPlayerWidth, windowHeight*7/16 - halfPlayerHeight);
+                t3 = new Player(windowWidth*5/8 - halfPlayerWidth, windowHeight*7/16 - halfPlayerHeight);
+                t4 = new Player(windowWidth*7/8 - halfPlayerWidth, windowHeight*7/16 - halfPlayerHeight);
                 PlayerList.add(t1);
                 PlayerList.add(t2);
                 PlayerList.add(t3);
                 PlayerList.add(t4);
-                t1 = new Player(windowWidth/3 - 20, windowHeight*1/5);
-                t2 = new Player(windowWidth*2/3 - 20, windowHeight*1/5);
+                t1 = new Player(windowWidth*3/10 - halfPlayerWidth, windowHeight*3/16 - halfPlayerHeight);
+                t2 = new Player(windowWidth*7/10 - halfPlayerWidth, windowHeight*3/16 - halfPlayerHeight);
                 PlayerList.add(t1);
                 PlayerList.add(t2);
-                t1 = new Player(windowWidth/2 - 20, windowHeight*1/12);
+                t1 = new Player(windowWidth/2 - halfPlayerWidth, windowHeight*1/16 - halfPlayerHeight);
                 PlayerList.add(t1);
 
                 //初始化对面的球门对象
-                t1 = new Player(windowWidth/2 - 100, 0);
-                t2 = new Player(windowWidth/2 - 60, 0);
-                t3 = new Player(windowWidth/2 - 20, 0);
-                t4 = new Player(windowWidth/2 + 20, 0);
-                t5 = new Player(windowWidth/2 + 60, 0);
+                t1 = new Player(windowWidth/2 - 5*halfPlayerWidth, -halfPlayerHeight);
+                t2 = new Player(windowWidth/2 - 3*halfPlayerWidth, -halfPlayerHeight);
+                t3 = new Player(windowWidth/2 - halfPlayerWidth, -halfPlayerHeight);
+                t4 = new Player(windowWidth/2 + halfPlayerWidth, -halfPlayerHeight);
+                t5 = new Player(windowWidth/2 + 3*halfPlayerWidth, -halfPlayerHeight);
                 PlayerList.add(t1);
                 PlayerList.add(t2);
                 PlayerList.add(t3);
@@ -404,6 +389,7 @@ class GameView extends View implements Runnable {
                 }
         };
 
+        //控制移动
         private int lastX;
         private int MaxRight;
         @Override
@@ -415,7 +401,8 @@ class GameView extends View implements Runnable {
                 switch(event.getAction()){
                         case MotionEvent.ACTION_DOWN: {
                                 lastX = eventX;
-                                MaxRight = windowWidth;
+                                //球员能到的最右边
+                                MaxRight = windowWidth - halfPlayerWidth * 2;
                                 //看看这里的右侧数值有没有问题
                                 Log.d("aaa", "onTouch: "+"  "+eventX+"  "+lastX);
                                 break;
@@ -426,23 +413,23 @@ class GameView extends View implements Runnable {
                                 //float First_left = mPlayerList.get(0).dx + dx;
 
                                 //相减
-                                if ((mPlayerList.get(0).x + dx > 0) && (mPlayerList.get(2).x + dx + 40 < MaxRight)) {
+                                if ((mPlayerList.get(0).x + dx > 0) && (mPlayerList.get(2).x + dx < MaxRight)) {
                                         mPlayerList.get(0).update(dx);
                                         mPlayerList.get(1).update(dx);
                                         mPlayerList.get(2).update(dx);
                                 }
-                                if ((mPlayerList.get(3).x + dx*13/20 > 0)&&(mPlayerList.get(6).x + dx*13/20 + 40 < MaxRight)){
-                                        mPlayerList.get(3).update(dx*13/20);
-                                        mPlayerList.get(4).update(dx*13/20);
-                                        mPlayerList.get(5).update(dx*13/20);
-                                        mPlayerList.get(6).update(dx*13/20);
+                                if ((mPlayerList.get(3).x + dx*15/27 > 0)&&(mPlayerList.get(6).x + dx*15/27 < MaxRight)){
+                                        mPlayerList.get(3).update(dx*15/27);
+                                        mPlayerList.get(4).update(dx*15/27);
+                                        mPlayerList.get(5).update(dx*15/27);
+                                        mPlayerList.get(6).update(dx*15/27);
                                 }
                                 //从上往下数第3排的限制条件
-                                if ((mPlayerList.get(7).x + dx*4/3 > 0)&&(mPlayerList.get(8).x + dx*4/3 + 40 < MaxRight)){
-                                        mPlayerList.get(7).update(dx*4/3);
-                                        mPlayerList.get(8).update(dx*4/3);
+                                if ((mPlayerList.get(7).x + dx*43/27 > 0)&&(mPlayerList.get(8).x + dx*43/27 < MaxRight)){
+                                        mPlayerList.get(7).update(dx*43/27);
+                                        mPlayerList.get(8).update(dx*43/27);
                                 }
-                                if((mPlayerList.get(9).x + dx > MaxRight/4)&&(mPlayerList.get(9).x + dx + 40 < MaxRight*3/4)){
+                                if((mPlayerList.get(9).x + dx > windowWidth * 3/10)&&(mPlayerList.get(9).x + dx < windowWidth * 51/80)){
                                         mPlayerList.get(9).update(dx);
                                 }
                                 break;
