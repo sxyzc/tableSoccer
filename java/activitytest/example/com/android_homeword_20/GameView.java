@@ -1,6 +1,7 @@
 package activitytest.example.com.android_homeword_20;
 
 
+import android.graphics.PorterDuff;
 import android.util.DisplayMetrics;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -142,17 +143,17 @@ class GameView extends View implements Runnable {
                 if(logicDx>60)dir=-1;
 
 
-             /*   法一
-              float dis=nearP.x+nearP.dx-ball.x;
-             if(Math.abs((double)diss)<1e-3)dir=0;
-             else if(diss>0)dir=-1;
-             else dir=1;*/
-             /*
-              * 法二
-              * if(logicDx>0){
-                     if(nearP.x+nearP.dx>ball.x-100)dir=-1;}
-             else if(nearP.x+nearP.dx>ball.x)dir=-1;*/
-                //Log.d("aitest", "ai: @@@ "+pos+" "+ball.x+","+ball.y+"  "+(nearP.x+nearP.dx));
+                 /*   法一
+                  float dis=nearP.x+nearP.dx-ball.x;
+                 if(Math.abs((double)diss)<1e-3)dir=0;
+                 else if(diss>0)dir=-1;
+                 else dir=1;*/
+                 /*
+                  * 法二
+                  * if(logicDx>0){
+                         if(nearP.x+nearP.dx>ball.x-100)dir=-1;}
+                 else if(nearP.x+nearP.dx>ball.x)dir=-1;*/
+                    //Log.d("aitest", "ai: @@@ "+pos+" "+ball.x+","+ball.y+"  "+(nearP.x+nearP.dx));
                 Log.d("aitest", "ai: @@@ "+pos+" "+logicDx+","+5*dir);
 
                 logicDx += 5*dir;
@@ -304,74 +305,102 @@ class GameView extends View implements Runnable {
                 super.onDraw(canvas);
                 // 实例化画笔
                 Paint p = new Paint();
-                // 设置画笔颜色
+                //设置足球场背景
                 p.setColor(Color.GREEN);
+                p.setAlpha(150);
+                canvas.drawRect(0,0,windowWidth/9,windowHeight,p);
+                canvas.drawRect(windowWidth*2/9,0,windowWidth*3/9,windowHeight,p);
+                canvas.drawRect(windowWidth*4/9,0,windowWidth*5/9,windowHeight,p);
+                canvas.drawRect(windowWidth*6/9,0,windowWidth*7/9,windowHeight,p);
+                canvas.drawRect(windowWidth*8/9,0,windowWidth,windowHeight,p);
+                p.setAlpha(80);
+                canvas.drawRect(windowWidth/9,0,windowWidth*2/9,windowHeight,p);
+                canvas.drawRect(windowWidth*3/9,0,windowWidth*4/9,windowHeight,p);
+                canvas.drawRect(windowWidth*5/9,0,windowWidth*6/9,windowHeight,p);
+                canvas.drawRect(windowWidth*7/9,0,windowWidth*8/9,windowHeight,p);
+
+                //画双方小禁区
+                p.setAlpha(255);
+                p.setColor(Color.WHITE);
+                p.setStrokeWidth(10);
+                canvas.drawLine(windowWidth*3/10,0,windowWidth*3/10,windowHeight*5/32,p);
+                canvas.drawLine(windowWidth*7/10,0,windowWidth*7/10,windowHeight*5/32,p);
+                canvas.drawLine(windowWidth*3/10,windowHeight*5/32,windowWidth*7/10,windowHeight*5/32,p);
+                canvas.drawLine(windowWidth*3/10,windowHeight*27/32,windowWidth*3/10,windowHeight,p);
+                canvas.drawLine(windowWidth*7/10,windowHeight*27/32,windowWidth*7/10,windowHeight,p);
+                canvas.drawLine(windowWidth*3/10,windowHeight*27/32,windowWidth*7/10,windowHeight*27/32,p);
+
+                //画中场线和中场圆
+                canvas.drawLine(0,windowHeight/2,windowWidth,windowHeight/2,p);
+                p.setStyle(Paint.Style.STROKE);
+                canvas.drawCircle(windowWidth/2,windowHeight/2,windowWidth/5,p);
 
                 Paint ballp =new Paint();
 
+                p.setStyle(Paint.Style.FILL);
                 boolean colliged=false;
-
+                p.setColor(Color.BLACK);
+                //绘制球员
                 for(int i = 0;i<mPlayerList.size();i++){
                         Player player = mPlayerList.get(i);
                         player.onDraw(canvas, p);
                         if(ball.check(player)){
-                                colliged=true;
-                                if(ball.isCollided!=0)continue;
-                                int to =getNextP(i);
-                                if(to==-1){
-                                        int topos =(int)(Math.random()*5)+10;
-                                        ball.changeV(PlayerList.get(topos));continue;
-                                }
+                            colliged=true;
+                            if(ball.isCollided!=0)continue;
+                            int to =getNextP(i);
+                            if(to==-1){
+                                int topos =(int)(Math.random()*5)+10;
+                                ball.changeV(PlayerList.get(topos));continue;
+                            }
+                                     /*int to=(int)(Math.random()*mPlayerList.size());
+                                     while(mPlayerList.get(to)==player){
+                                         to=(int)(Math.random()*mPlayerList.size());
+                                     }*/
+                            ball.changeV(mPlayerList.get(to));
+                                        //ball.changeV(mPlayerList.get());
+                    }
+                }
+
+                 /*for (int i=0;i<mPlayerList.size();i++){
+                     mPlayerList.get(i).onDraw(canvas, p);
+                     if(ball.check(mPlayerList.get(i))){
+                         colliged=true;
+                         int to=1-i;
+                         if(ball.isCollided!=0)continue;
+                         ball.changeV(mPlayerList.get(to));
+                     }
+                 }*/
+
+                        if(colliged)ballp.setColor(Color.RED);
+                        else ballp.setColor(Color.YELLOW);
+
+                        p.setColor(Color.BLUE);
+                 /*for (Player player :
+                         PlayerList) {
+                     player.onDraw(canvas, p);
+                 }*/
+
+                        for(int i = 0;i<PlayerList.size();i++){
+                                Player player = PlayerList.get(i);
+                                player.onDraw(canvas, p);
+                                if(ball.check(player)){
+                                        colliged=true;
+                                        if(ball.isCollided!=0)continue;
+                                        int to =getNextP(i);
+                                        if(to==-1){
+                                                int topos =(int)(Math.random()*5)+10;
+                                                ball.changeV(mPlayerList.get(topos));continue;
+                                        }
                              /*int to=(int)(Math.random()*mPlayerList.size());
                              while(mPlayerList.get(to)==player){
                                  to=(int)(Math.random()*mPlayerList.size());
                              }*/
-                                ball.changeV(mPlayerList.get(to));
-                                //ball.changeV(mPlayerList.get());
-                        }
-                }
-
-             /*for (int i=0;i<mPlayerList.size();i++){
-                 mPlayerList.get(i).onDraw(canvas, p);
-                 if(ball.check(mPlayerList.get(i))){
-                     colliged=true;
-                     int to=1-i;
-                     if(ball.isCollided!=0)continue;
-                     ball.changeV(mPlayerList.get(to));
-                 }
-             }*/
-
-                if(colliged)ballp.setColor(Color.RED);
-                else ballp.setColor(Color.YELLOW);
-
-                p.setColor(Color.BLUE);
-             /*for (Player player :
-                     PlayerList) {
-                 player.onDraw(canvas, p);
-             }*/
-
-                for(int i = 0;i<PlayerList.size();i++){
-                        Player player = PlayerList.get(i);
-                        player.onDraw(canvas, p);
-                        if(ball.check(player)){
-                                colliged=true;
-                                if(ball.isCollided!=0)continue;
-                                int to =getNextP(i);
-                                if(to==-1){
-                                        int topos =(int)(Math.random()*5)+10;
-                                        ball.changeV(mPlayerList.get(topos));continue;
+                                        ball.changeV(PlayerList.get(to));
+                                        //ball.changeV(mPlayerList.get());
                                 }
-                     /*int to=(int)(Math.random()*mPlayerList.size());
-                     while(mPlayerList.get(to)==player){
-                         to=(int)(Math.random()*mPlayerList.size());
-                     }*/
-                                ball.changeV(PlayerList.get(to));
-                                //ball.changeV(mPlayerList.get());
                         }
-                }
-                // 画球
-                ball.myOnDraw(canvas, ballp);
-
+                        // 画球
+                        ball.myOnDraw(canvas, ballp);
         }
 
         //更新界面处理器
