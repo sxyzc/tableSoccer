@@ -26,6 +26,9 @@ class GameView extends View implements Runnable {
         private int halfPlayerHeight;
         private int halfPlayerWidth;
 
+        //score为敌方得分，mScore为我方得分
+        private int score=0,mScore=0;
+
         private RefreshHandler mRedrawHandler = null;
         Ball ball=new Ball();
         List<Player> mPlayerList;
@@ -39,6 +42,7 @@ class GameView extends View implements Runnable {
                 if(i == 4)return (int)(Math.random()*2)==0?0:1;
                 if(i == 5)return (int)(Math.random()*2)==0?1:2;
                 if(i == 6)return 2;
+                if(i>=10)return -2;
                 return -1;
         }
 
@@ -351,6 +355,8 @@ class GameView extends View implements Runnable {
                             if(to==-1){
                                 int topos =(int)(Math.random()*5)+10;
                                 ball.changeV(PlayerList.get(topos));continue;
+                            }else if (to==-2) {
+                                Log.d("gameTest", "onDraw: 敌方进球了!");score++;ball.isCollided=1;continue;
                             }
                                      /*int to=(int)(Math.random()*mPlayerList.size());
                                      while(mPlayerList.get(to)==player){
@@ -371,8 +377,6 @@ class GameView extends View implements Runnable {
                      }
                  }*/
 
-                        if(colliged)ballp.setColor(Color.RED);
-                        else ballp.setColor(Color.YELLOW);
 
                         p.setColor(Color.BLUE);
                  /*for (Player player :
@@ -390,6 +394,8 @@ class GameView extends View implements Runnable {
                                         if(to==-1){
                                                 int topos =(int)(Math.random()*5)+10;
                                                 ball.changeV(mPlayerList.get(topos));continue;
+                                        }else if (to==-2) {
+                                            Log.d("gameTest", "onDraw: 我方进球了!");mScore++;ball.isCollided=1;continue;
                                         }
                              /*int to=(int)(Math.random()*mPlayerList.size());
                              while(mPlayerList.get(to)==player){
@@ -399,7 +405,11 @@ class GameView extends View implements Runnable {
                                         //ball.changeV(mPlayerList.get());
                                 }
                         }
-                        // 画球
+
+            if(colliged)ballp.setColor(Color.RED);
+            else ballp.setColor(Color.YELLOW);
+
+            // 画球
                         ball.myOnDraw(canvas, ballp);
         }
 
