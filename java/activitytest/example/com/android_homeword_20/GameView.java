@@ -29,6 +29,7 @@ class GameView extends View implements Runnable {
         //score为敌方得分，mScore为我方得分
         private int score=0,mScore=0;
 
+
         private RefreshHandler mRedrawHandler = null;
         Ball ball=new Ball();
         List<Player> mPlayerList;
@@ -431,15 +432,19 @@ class GameView extends View implements Runnable {
         //控制移动
         private int lastX;
         private int MaxRight;
+        private int eventX;
+       // private int eventY;
+        private float dx = 0;
         @Override
         public boolean onTouchEvent(MotionEvent event) {
 
-                int eventX = (int)event.getRawX();
-                int eventY = (int)event.getRawY();
+                eventX = (int)event.getRawX();
+                //eventY = (int)event.getRawY();
 
                 switch(event.getAction()){
                         case MotionEvent.ACTION_DOWN: {
-                                lastX = eventX;
+                                lastX = eventX - (int)dx;
+                                //lastX = eventX;
                                 //球员能到的最右边
                                 MaxRight = windowWidth - halfPlayerWidth * 2;
                                 //看看这里的右侧数值有没有问题
@@ -447,7 +452,7 @@ class GameView extends View implements Runnable {
                                 break;
                         }
                         case MotionEvent.ACTION_MOVE:{
-                                float dx = eventX - lastX;
+                                dx = eventX - lastX;
                                 Log.d("aaa", "onTouch: "+dx+"  "+eventX+"  "+lastX);
                                 //float First_left = mPlayerList.get(0).dx + dx;
 
@@ -468,7 +473,7 @@ class GameView extends View implements Runnable {
                                         mPlayerList.get(7).update(dx*43/27);
                                         mPlayerList.get(8).update(dx*43/27);
                                 }
-                                if((mPlayerList.get(9).x + dx > windowWidth * 3/10)&&(mPlayerList.get(9).x + dx < windowWidth * 51/80)){
+                                if((mPlayerList.get(9).x + dx > windowWidth * 3/10)&&(mPlayerList.get(9).x + dx < windowWidth * 51/80)) {
                                         mPlayerList.get(9).update(dx);
                                 }
                                 break;
