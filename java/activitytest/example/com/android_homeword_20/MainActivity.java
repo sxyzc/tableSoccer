@@ -4,10 +4,12 @@ import android.app.Activity;;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
 import activitytest.example.com.android_homeword_20.bluetooth.TransportData;
 
 public class MainActivity extends Activity {
@@ -45,5 +47,13 @@ public class MainActivity extends Activity {
     public void start_game(View c){
             Intent intent = new Intent(MainActivity.this, Single_Game_View.class);
             startActivity(intent);
+    }
+    protected void onDestroy() {
+        Log.v("MainActivity", "onDestroy");
+        /*if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)TD.shutdownClient();
+        else TD.shutdownServer();
+        TD.shutdownServer();
+        TD.shutdownClient();*/
+        super.onDestroy();
     }
 }

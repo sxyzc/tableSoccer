@@ -477,6 +477,9 @@ public class GameView extends View implements Runnable {
                                                 GameView.this.ball.update(windowHeight, windowWidth);
                                                 aiLogic();
                                         }
+                                        if(BluetoothMsg.isOpen){
+                                                update_playerDx(PlayerList,PlayerDx);
+                                        }
                                 }else{
                                         scored_time++;
                                         if(scored_time==20){

@@ -170,46 +170,26 @@ public class TransportData {
                     mreadThread = null;
                 }
                 try {
-                    if (socket != null) {
-                        socket.close();
-                        socket = null;
-                    }
-                    if (mserverSocket != null) {
-                        mserverSocket.close();/* 关闭服务器 */
-                        mserverSocket = null;
-                    }
-                    if (osocket != null) {
-                        osocket.close();
-                        osocket = null;
-                    }
-                    if (oserverSocket != null) {
-                        oserverSocket.close();/* 关闭服务器 */
-                        oserverSocket = null;
-                    }
-                    if (cgetsocket != null) {
-                        cgetsocket.close();
-                        cgetsocket = null;
-                    }
-                    if (stocSocket != null) {
-                        stocSocket.close();/* 关闭服务器 */
-                        stocSocket = null;
-                    }
-
-                    if (ball_socket != null) {
-                        ball_socket.close();
-                        ball_socket = null;
-                    }
                     if (player_socket != null) {
                         player_socket.close();
                         player_socket = null;
                     }
-                    if (score_socket != null) {
-                        score_socket.close();
-                        score_socket = null;
+                    if (player_server_socket != null) {
+                        player_server_socket.close();/* 关闭服务器 */
+                        player_server_socket = null;
                     }
-                    Log.v("LoadingTest","close sever ");
+                    if (ball_socket != null) {
+                        ball_socket.close();
+                        ball_socket = null;
+                    }
+                    if (ball_server_socket != null) {
+                        ball_server_socket.close();/* 关闭服务器 */
+                        ball_server_socket = null;
+                    }
+
+                    Log.d("BlueTest","服务器连接关闭");
                 } catch (IOException e) {
-                    Log.e("server", "mserverSocket.close()", e);
+                    Log.e("server", "服务器关闭异常", e);
                 }
 
             }
@@ -235,52 +215,20 @@ public class TransportData {
                     mreadThread.interrupt();
                     mreadThread = null;
                 }
-                if (socket != null) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    socket = null;
-                }
-                if (cgetsocket != null) {
-                    try {
-                        cgetsocket.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    cgetsocket = null;
-                }
-                if (osocket != null) {
-                    try {
-                        osocket.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    osocket = null;
-                }
-
-
                 try {
-                    if (ball_socket != null) {
-                        ball_socket.close();
-                        ball_socket = null;
-                    }
                     if (player_socket != null) {
                         player_socket.close();
                         player_socket = null;
                     }
-                    if (score_socket != null) {
-                        score_socket.close();
-                        score_socket = null;
+                    if (ball_socket != null) {
+                        ball_socket.close();
+                        ball_socket = null;
                     }
-                }catch (IOException e){
-                    e.printStackTrace();
+
+                    Log.d("BlueTest","客户端连接关闭");
+                } catch (IOException e) {
+                    Log.e("server", "客户端关闭异常", e);
                 }
-                Log.v("LoadingTest","close client ");
 
             }
 
@@ -299,7 +247,7 @@ public class TransportData {
 
                 player_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
                 ball_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("C83DA007-3A9F-4249-9A96-18CACE25F84D"));
-                score_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
+                //score_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
 
 
 
@@ -319,7 +267,7 @@ public class TransportData {
 
                 player_socket.connect();
                 ball_socket.connect();
-                score_socket.connect();
+               // score_socket.connect();
 
                 connected2=true;//通
                 Log.d("BlueTest","客户端已连接");
@@ -350,8 +298,8 @@ public class TransportData {
                         UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
                 ball_server_socket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
                         UUID.fromString("C83DA007-3A9F-4249-9A96-18CACE25F84D"));
-                score_server_socket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
-                        UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
+                //score_server_socket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
+                //        UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
                 //  00001101-0000-1000-8000-00805F9B34FB   C83DA007-3A9F-4249-9A96-18CACE25F84D 54B32C11-45BD-44A2-87BD-4DA72CB8E3EB
                 Log.d("server", "wait cilent connect...");
 
@@ -364,7 +312,7 @@ public class TransportData {
                     /* 接受客户端的连接请求 */
                 player_socket = player_server_socket.accept();
                 ball_socket = ball_server_socket.accept();
-                score_socket = score_server_socket.accept();
+                //score_socket = score_server_socket.accept();
                 Log.d("BlueTest","服务器已连接");
 
                 Message msg2 = new Message();
@@ -394,12 +342,36 @@ public class TransportData {
 
 
     void sendPlayer(){
-
+        //写入球员dx数据
+        String msgText;
+        //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
+        msgText = mPlayerDx/windowWidth + "," ;
+        Log.d("BlueData","已发送:"+msgText);
+        // else
+        //    msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
+        try {
+            player_os.write(msgText.getBytes());
+            player_os.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    float receivePlayer(){
-        float dx=0;
-        return dx;
+    void receivePlayer()throws  Exception{
+        byte[] buffer = new byte[128];
+        int bytes;
+        if ((bytes = player_is.read(buffer)) > 0) {
+            byte[] buf_data = new byte[bytes];
+            for (int i = 0; i < bytes; i++) {
+                buf_data[i] = buffer[i];
+            }
+            String s = new String(buf_data);
+            Log.d("BlueData","已接收:"+s);
+            String[] z = s.split(",");
+            //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
+            if (z.length > 0 && isDouble(z[0]))
+                PlayerDx=(float) (Double.parseDouble(z[0]))*windowWidth;
+        }
     }
 
     void sendBall(){
@@ -407,7 +379,7 @@ public class TransportData {
         String msgText;
         //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
         msgText = ball.x/windowWidth + "," + ball.y/windowHeight+",";
-        Log.d("BlueData","已发送:"+msgText);
+        //Log.d("BlueData","已发送:"+msgText);
         // else
         //    msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
         try {
@@ -429,7 +401,7 @@ public class TransportData {
                 buf_data[i] = buffer[i];
             }
             String s = new String(buf_data);
-            Log.d("BlueData","已接收:"+s);
+            //Log.d("BlueData","已接收:"+s);
             String[] z = s.split(",");
             //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
             if (z.length > 0 && isDouble(z[0]))
@@ -455,13 +427,11 @@ public class TransportData {
                 ball_os = ball_socket.getOutputStream();
                 player_is = player_socket.getInputStream();
                 player_os = player_socket.getOutputStream();
-                score_is = score_socket.getInputStream();
-                score_os = score_socket.getOutputStream();
 
                 while(true){
 
                     sendPlayer();
-                    PlayerDx = receivePlayer();
+                    receivePlayer();
                     if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)receiveBall();
                     else if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE)sendBall();
 
@@ -488,251 +458,6 @@ public class TransportData {
             }
         }
     }
-
-
-
-
-
-//    //读取数据
-//    private class readThread extends Thread {
-//        @Override
-//        public void run() {
-//
-//            byte[] buffer = new byte[1024];
-//            int bytes;
-//            InputStream mmInStream = null;
-//
-//            try {
-//                //if (BluetoothMsg.serviceOrCilent == BluetoothMsg.ServerOrCilent.CILENT)
-//                //    mmInStream = osocket.getInputStream();
-//                // else
-//                mmInStream = socket.getInputStream();
-//            } catch (IOException e1) {
-//                // TODO Auto-generated catch block
-//                e1.printStackTrace();
-//            }
-//            while (true) {
-//                if(shutFlag)break;
-//                transfering=true;
-//                /*try {
-//                    Thread.sleep(50);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }*/
-//                boolean ViewCreated = false;
-//                if(ViewCreated)
-//                    try {
-//
-//                        //服务器发送ball数据
-//                        //socket没数据时才写入
-//
-//                        Log.v("BTTest","availa    :   "+  cgetsocket.getInputStream().available() );
-//                        if ( BluetoothMsg.serviceOrCilent == BluetoothMsg.ServerOrCilent.SERVICE &&cgetsocket.getInputStream().available() != 0) {
-//
-//                            sendcnt++;
-//                            Log.v("MainView", "send  " + sendcnt + "  avail: " + cgetsocket.getInputStream().available());
-//
-//                            Log.v("BTTest","flag1");
-//
-//                            //获取要传输球的信息开始
-//                            String balltext = "";
-//                            //int ballnum = mBallList.size();
-//                            //balltext+=ballnum;
-//                            /*
-//                            for (Ball ball :
-//                                    mBallList) {
-//                                int balltype=1;//1 for BubbleBall 2 for ThornBall
-//                                if(ball instanceof ThornBall)balltype=2;
-//                                balltext += "," + ball.getX() + "," + ball.getY() + "," + ball.getAngle()+","+balltype;
-//                            }
-//                            */
-//                            int bytecnt = balltext.getBytes().length;
-//                            //if(bytecnt==0)balltext+="00000000000000000000000000000000";
-//                            balltext = bytecnt + "" + balltext;
-//                            //获取传输球相关的信息结束
-//
-//                            Log.v("LoadingTest","send  +   "+balltext);
-//
-//                            try {
-//                                OutputStream os;
-//
-//                                os = cgetsocket.getOutputStream();
-//                                //os.write(bytecnt);
-//                                os.write(balltext.getBytes());
-//                                os.flush();
-//                                Log.v("MainView", " write and avai  " + cgetsocket.getInputStream().available());
-//                                //Log.v("MainView","output avai  " + cgetsocket.getOutputStream())
-//                                Log.v("BTTest", "string  output  " + balltext);
-//                                String tb = "";
-//                                for (int i = 0; i < balltext.getBytes().length; i++)
-//                                    tb += balltext.getBytes()[i] + " ";
-//                                Log.v("BTTest", "bytes   " + tb);
-//
-//
-//                                //cgetsocket.getInputStream().reset();
-//                                InputStream myinput = cgetsocket.getInputStream();
-//                                byte[] myt = new byte[5000];
-//                                int k = myinput.read(myt);
-//                                Log.v("MainView", "read     " + k);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//
-//                        //客户端接收ball数据
-//                        if (BluetoothMsg.serviceOrCilent == BluetoothMsg.ServerOrCilent.CILENT) {
-//                            InputStream stocStream = null;
-//                            byte[] ballbuffer = new byte[409600];
-//
-//                            try {
-//                                stocStream = cgetsocket.getInputStream();
-//                            } catch (IOException e1) {
-//                                // TODO Auto-generated catch block
-//                                e1.printStackTrace();
-//                            }
-//
-//
-//                            try {
-//                                //读一定长度的数据，能包括首位字节长度，30是估计值
-//                                if (stocStream.available() > 30) {
-//
-//                                    byte[] t0 = new byte[30];
-//                                    stocStream.read(t0);
-//                                    if(!new String(t0).startsWith("0")) {
-//                                        String tt = new String(t0);
-//                                        Log.v("BTTest", "t1   " + tt);
-//                                        int ff = tt.indexOf(",");
-//                                        String t2 = tt.substring(0, ff);
-//                                        Log.v("BTTest", "t2   " + t2);
-//                                        bytes = Integer.parseInt(t2)-1;
-//                                        Log.v("BTTest", "bytes   " + bytes);
-//                                        String t3 = tt.substring(ff + 1, tt.length());
-//                                        Log.v("BTTest", "t3   " + t3);
-//                                        //bytes += t2.length();
-//                                        //bytes = new DataInputStream(stocStream).readInt();
-//                                        byte[] buf_data = new byte[bytes];
-//                                        byte[] t4 = t3.getBytes();
-//
-//                                        // bytes-=t4.length;
-//                                        for (int i = 0; i < t4.length && i < bytes; i++)
-//                                            buf_data[i] = t4[i];
-//                                        //ballbuffer[i]=
-//                                        Log.v("BTTest","recive  bufdata    "+ new String(buf_data));
-//                                        Log.v("BTTest","recive  t4    "+ new String(t4));
-//                                        int readCount = t4.length ; // 已经成功读取的字节的个数
-//                                        int finread=readCount;
-//                                        Log.v("BTTest", " no wrong  " + readCount + "  " + bytes);
-//                                        while (readCount < bytes) {
-//                                            int ttt=stocStream.read(ballbuffer, readCount, bytes - readCount);
-//                                            readCount += ttt;
-//                                            Log.v("BTTest","ttt is   "+ttt);
-//                                            Log.v("BTTest", "readcnt:  " + readCount + "   needs  " + bytes);
-//                                            //if(readCount==bytes)break;
-//                                        }
-//                                        Log.v("BTTest", "read ok   " + ballbuffer.length);
-//                                        String tr = "";
-//                                        for (int i = 0; i < bytes; i++)
-//                                            tr += ballbuffer[i] + " ";
-//                                        Log.v("BTTest", "recive   " + tr);
-//                                        Log.v("BTTest","recive      "+ new String(ballbuffer));
-//                                        Log.v("BTTest", "rds ok   ");
-//                                        for (int i = finread; i < bytes; i++) {
-//                                            buf_data[i] = ballbuffer[i];
-//                                        }
-//                                        Log.v("BTTest","recive final  bufdata   "+ new String(buf_data));
-//                                        String s = new String(buf_data);
-//                                        String[] z = s.split(",");
-//                                        int len = z.length / 4, pos = 0;
-//                                        //mBallList.clear();
-//                                         /*List<Ball> temList = new ArrayList<>();
-//
-//                                        for (int i = 0; i < len; i++) {
-//                                            if (pos + 3 < z.length && isDouble(z[pos]) && isDouble(z[pos + 1]) && isDouble(z[pos + 2])&&z[pos+3].equals("1")) {
-//                                                BubbleBall tem = new BubbleBall(Float.parseFloat(z[pos]), Float.parseFloat(z[pos + 1]), Float.parseFloat(z[pos + 2]));
-//                                                temList.add(tem);
-//                                                pos += 4;
-//                                            } else if (pos + 3 < z.length && isDouble(z[pos]) && isDouble(z[pos + 1]) && isDouble(z[pos + 2])&&z[pos+3].equals("2")) {
-//                                                ThornBall tem = new ThornBall(Float.parseFloat(z[pos]), Float.parseFloat(z[pos + 1]), Float.parseFloat(z[pos + 2]));
-//                                                temList.add(tem);
-//                                                pos += 4;
-//                                            }else pos++;
-//                                        }
-//                                        mBallList=temList;*/
-//
-//
-//                                        if (!connected2) connected2 = true;
-//                                    }
-//                                    else{
-//                                        byte [] temm=new byte[102400];
-//                                        stocStream.read(temm);
-//                                    }
-//                                    //发送数据给服务器，说明可以接收数据
-//                                    try {
-//                                        OutputStream os = cgetsocket.getOutputStream();
-//                                        os.write("ok".getBytes());
-//                                        os.flush();
-//                                    } catch (IOException e) {
-//                                        // Log.e("connect", "", e);
-//                                    }
-//                                }
-//                            } catch (IOException e1) {
-//                                // TODO Auto-generated catch block
-//                                Log.v("MainView","  wrong");e1.printStackTrace();
-//
-//                            }
-//
-//
-//                        }
-//
-//
-//
-////                        //写入角色数据
-////                        String msgText;
-////                        //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
-////                        msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
-////                        // else
-////                        //    msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
-////                        try {
-////                            OutputStream os;
-////                            os = socket.getOutputStream();
-////                            os.write(msgText.getBytes());
-////                            os.flush();
-////                        } catch (IOException e) {
-////                            e.printStackTrace();
-////                        }
-////                        // Read from the InputStream
-////                        if ((bytes = mmInStream.read(buffer)) > 0) {
-////                            byte[] buf_data = new byte[bytes];
-////                            for (int i = 0; i < bytes; i++) {
-////                                buf_data[i] = buffer[i];
-////                            }
-////                            String s = new String(buf_data);
-////                            String[] z = s.split(",");
-////                            //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
-////                            if (z.length>0&&isDouble(z[0]))
-////                                oHero.setAngle(Double.parseDouble(z[0]));
-////                            if (z.length>1&&isDouble(z[1]))
-////                                oHero.setmSpeed(Double.parseDouble(z[1]));
-////                            if (z.length>2&&isDouble(z[2]))
-////                                oHero.setScreenX((int) Double.parseDouble(z[2]));
-////                            if (z.length>3&&isDouble(z[3]))
-////                                oHero.setScreenY((int) Double.parseDouble(z[3]));
-////
-////                        }
-//                    } catch (IOException e) {
-//                        try {
-//                            mmInStream.close();
-//                        } catch (IOException e1) {
-//                            // TODO Auto-generated catch block
-//                            e1.printStackTrace();
-//                        }
-//                        Log.v("BTTest","wwwwwwwwwwwwwwwwww");
-//                        break;
-//                    }
-//                transfering=false;
-//            }
-//        }
-//    }
 
 
 }
