@@ -14,8 +14,10 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
+
 // 自定义视图类
-class GameView extends View implements Runnable {
+public class GameView extends View implements Runnable {
 
         //自定义监听
         interface MyListener{
@@ -29,6 +31,11 @@ class GameView extends View implements Runnable {
         public void setMyListener(MyListener listener){
                 myListener = listener;
         }
+
+        //蓝牙传输数据用
+        public static float mPlayerDx;
+        public static float PlayerDx;
+
 
         //定义该视图的宽高
         private int windowHeight;
@@ -49,7 +56,7 @@ class GameView extends View implements Runnable {
         }
 
         private RefreshHandler mRedrawHandler = null;
-        Ball ball=new Ball();
+        public static Ball ball=new Ball();
         List<Player> mPlayerList;
         List<Player> PlayerList;
 
@@ -67,7 +74,7 @@ class GameView extends View implements Runnable {
         private void init(){
                 ball.x = mPlayerList.get(4).getCenterX();
                 ball.y = windowHeight/2;
-                ball.vx=20*2;ball.vy=10*2;
+                ball.init();
                 if(scored_who==0)ball.vy*=-1;
                 for (int i =0; i<mPlayerList.size();i++){
                         mPlayerList.get(i).dx=0;
@@ -466,8 +473,13 @@ class GameView extends View implements Runnable {
                                 if(GameView.this.ball.isCollided!=0) GameView.this.ball.isCollided++;//碰撞后的时间计数
                                 if(GameView.this.ball.isCollided>5) GameView.this.ball.isCollided=0;//碰撞超过一定时间回到初始状态
                                 if(scored_time==0){
-                                        GameView.this.ball.update(windowHeight, windowWidth);
-                                        aiLogic();
+                                        if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE || BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.NONE) {
+                                                GameView.this.ball.update(windowHeight, windowWidth);
+                                                aiLogic();
+                                        }
+                                        if(BluetoothMsg.isOpen){
+                                                update_playerDx(PlayerList,PlayerDx);
+                                        }
                                 }else{
                                         scored_time++;
                                         if(scored_time==20){
@@ -481,20 +493,45 @@ class GameView extends View implements Runnable {
         };
 
         //控制移动
-        private int lastX;
+        private float lastX;
         private int MaxRight;
-        private int eventX;
+        private float eventX;
        // private int eventY;
         private float dx = 0;
+
+        public void update_playerDx(List<Player> player_list,float dx){
+                //相减
+                if ((player_list.get(0).x + dx > 0) && (player_list.get(2).x + dx < MaxRight)) {
+                        player_list.get(0).update(dx);
+                        player_list.get(1).update(dx);
+                        player_list.get(2).update(dx);
+                }
+                if ((player_list.get(3).x + dx*15/27 > 0)&&(player_list.get(6).x + dx*15/27 < MaxRight)){
+                        player_list.get(3).update(dx*15/27);
+                        player_list.get(4).update(dx*15/27);
+                        player_list.get(5).update(dx*15/27);
+                        player_list.get(6).update(dx*15/27);
+                }
+                //从上往下数第3排的限制条件
+                if ((player_list.get(7).x + dx*43/27 > 0)&&(player_list.get(8).x + dx*43/27 < MaxRight)){
+                        player_list.get(7).update(dx*43/27);
+                        player_list.get(8).update(dx*43/27);
+                }
+                if((player_list.get(9).x + dx > windowWidth * 3/10)&&(player_list.get(9).x + dx < windowWidth * 51/80)) {
+                        player_list.get(9).update(dx);
+                }
+        }
+
+
         @Override
         public boolean onTouchEvent(MotionEvent event) {
 
-                eventX = (int)event.getRawX();
+                eventX = event.getRawX();
                 //eventY = (int)event.getRawY();
 
                 switch(event.getAction()){
                         case MotionEvent.ACTION_DOWN: {
-                                lastX = eventX - (int)dx;
+                                lastX = eventX - dx;
                                 //lastX = eventX;
                                 //球员能到的最右边
                                 MaxRight = windowWidth - halfPlayerWidth * 2;
@@ -507,26 +544,9 @@ class GameView extends View implements Runnable {
                                 //Log.d("aaa", "onTouch: "+dx+"  "+eventX+"  "+lastX);
                                 //float First_left = mPlayerList.get(0).dx + dx;
 
-                                //相减
-                                if ((mPlayerList.get(0).x + dx > 0) && (mPlayerList.get(2).x + dx < MaxRight)) {
-                                        mPlayerList.get(0).update(dx);
-                                        mPlayerList.get(1).update(dx);
-                                        mPlayerList.get(2).update(dx);
-                                }
-                                if ((mPlayerList.get(3).x + dx*15/27 > 0)&&(mPlayerList.get(6).x + dx*15/27 < MaxRight)){
-                                        mPlayerList.get(3).update(dx*15/27);
-                                        mPlayerList.get(4).update(dx*15/27);
-                                        mPlayerList.get(5).update(dx*15/27);
-                                        mPlayerList.get(6).update(dx*15/27);
-                                }
-                                //从上往下数第3排的限制条件
-                                if ((mPlayerList.get(7).x + dx*43/27 > 0)&&(mPlayerList.get(8).x + dx*43/27 < MaxRight)){
-                                        mPlayerList.get(7).update(dx*43/27);
-                                        mPlayerList.get(8).update(dx*43/27);
-                                }
-                                if((mPlayerList.get(9).x + dx > windowWidth * 3/10)&&(mPlayerList.get(9).x + dx < windowWidth * 51/80)) {
-                                        mPlayerList.get(9).update(dx);
-                                }
+                                mPlayerDx = dx;
+                                update_playerDx(mPlayerList,dx);
+
                                 break;
                         }
                         default:break;

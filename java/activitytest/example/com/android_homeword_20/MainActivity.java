@@ -4,9 +4,13 @@ import android.app.Activity;;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
+import activitytest.example.com.android_homeword_20.bluetooth.TransportData;
 
 public class MainActivity extends Activity {
 
@@ -19,6 +23,8 @@ public class MainActivity extends Activity {
 
     public static int windowHeight ;
     public static int windowWidth ;
+
+    public static TransportData TD;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,10 +39,35 @@ public class MainActivity extends Activity {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.activity_main);
+
+            //蓝牙
+        //TD = new TransportData();
+        //TD.openBluetooth();
     }
 
     public void start_game(View c){
             Intent intent = new Intent(MainActivity.this, Single_Game_View.class);
             startActivity(intent);
+    }
+
+    public void bluetooth_game(View c){
+
+    }
+
+    public void data_(View a){
+
+    }
+
+    public void setting(View a){
+
+    }
+
+    protected void onDestroy() {
+        Log.v("MainActivity", "onDestroy");
+        /*if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)TD.shutdownClient();
+        else TD.shutdownServer();
+        TD.shutdownServer();
+        TD.shutdownClient();*/
+        super.onDestroy();
     }
 }

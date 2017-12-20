@@ -12,4 +12,22 @@
         android:layout_height="wrap_content"
         android:text="开始游戏"/>
 
+    <Button
+        android:onClick="bluetooth_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="蓝牙游戏"/>
+
+    <Button
+        android:onClick="data_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="个人纪录"/>
+
+    <Button
+        android:onClick="setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="设置"/>
+
 </LinearLayout>
