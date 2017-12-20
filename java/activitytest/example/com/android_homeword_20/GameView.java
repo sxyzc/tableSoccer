@@ -39,6 +39,8 @@ class GameView extends View implements Runnable {
 
         //score为敌方得分，mScore为我方得分
         private int score=0,mScore=0;
+        private int scored_time=0;
+        private int scored_who=1;//0 for us, 1 for other
         public int getScore(){
                 return score;
         }
@@ -61,6 +63,16 @@ class GameView extends View implements Runnable {
                 if(i == 6)return 2;
                 if(i>=10)return -2;
                 return -1;
+        }
+        private void init(){
+                ball.x = mPlayerList.get(4).getCenterX();
+                ball.y = windowHeight/2;
+                ball.vx=20*2;ball.vy=10*2;
+                if(scored_who==0)ball.vy*=-1;
+                for (int i =0; i<mPlayerList.size();i++){
+                        mPlayerList.get(i).dx=0;
+                        PlayerList.get(i).dx=0;
+                }
         }
 
         //计算两点距离
@@ -298,6 +310,9 @@ class GameView extends View implements Runnable {
                 PlayerList.add(t4);
                 PlayerList.add(t5);
 
+                //球场初始化
+                init();
+
                 // 获得焦点
                 setFocusable(true);
                 mRedrawHandler = new RefreshHandler();//放在主线程里面
@@ -367,6 +382,7 @@ class GameView extends View implements Runnable {
                 for(int i = 0;i<mPlayerList.size();i++){
                         Player player = mPlayerList.get(i);
                         player.onDraw(canvas, p);
+                        if(scored_time!=0)continue;
                         if(ball.check(player)){
                             colliged=true;
                             if(ball.isCollided!=0)continue;
@@ -376,6 +392,8 @@ class GameView extends View implements Runnable {
                                 ball.changeV(PlayerList.get(topos));continue;
                             }else if (to==-2) {
                                 Log.d("gameTest", "onDraw: 敌方进球了!");score++;
+                                scored_who=1;
+                                    scored_time=1;init();
                                 myListener.notifyDataChage(score);
                                 ball.isCollided=1;continue;
                             }
@@ -408,6 +426,7 @@ class GameView extends View implements Runnable {
                         for(int i = 0;i<PlayerList.size();i++){
                                 Player player = PlayerList.get(i);
                                 player.onDraw(canvas, p);
+                                if(scored_time!=0)continue;
                                 if(ball.check(player)){
                                         colliged=true;
                                         if(ball.isCollided!=0)continue;
@@ -417,6 +436,8 @@ class GameView extends View implements Runnable {
                                                 ball.changeV(mPlayerList.get(topos));continue;
                                         }else if (to==-2) {
                                             Log.d("gameTest", "onDraw: 我方进球了!");mScore++;
+                                            scored_who = 0;
+                                            scored_time=1;init();
                                             Listener.notifyDataChage(mScore);
                                             ball.isCollided=1;
                                              continue;
@@ -444,8 +465,15 @@ class GameView extends View implements Runnable {
                         if (msg.what == 0x101) {
                                 if(GameView.this.ball.isCollided!=0) GameView.this.ball.isCollided++;//碰撞后的时间计数
                                 if(GameView.this.ball.isCollided>5) GameView.this.ball.isCollided=0;//碰撞超过一定时间回到初始状态
-                                GameView.this.ball.update(windowHeight,windowWidth);
-                                aiLogic();
+                                if(scored_time==0){
+                                        GameView.this.ball.update(windowHeight, windowWidth);
+                                        aiLogic();
+                                }else{
+                                        scored_time++;
+                                        if(scored_time==20){
+                                                scored_time=0;
+                                        }
+                                }
                                 GameView.this.invalidate();
                         }
                         super.handleMessage(msg);
