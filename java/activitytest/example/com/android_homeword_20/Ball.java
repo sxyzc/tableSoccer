@@ -4,8 +4,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class Ball {
-    float vx,vy;//速度
-    float x,y;//位置
+    public float vx,vy;//速度
+    public float x,y;//位置
     float r;
     float eps = (float) 1e-6;
     int isCollided = 0;

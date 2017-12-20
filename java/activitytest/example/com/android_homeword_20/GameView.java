@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // 自定义视图类
-class GameView extends View implements Runnable {
+public class GameView extends View implements Runnable {
 
         //自定义监听
         interface MyListener{
@@ -29,6 +29,11 @@ class GameView extends View implements Runnable {
         public void setMyListener(MyListener listener){
                 myListener = listener;
         }
+
+        //蓝牙传输数据用
+        public static float mPlayerDx;
+        public static float PlayerDx;
+
 
         //定义该视图的宽高
         private int windowHeight;
@@ -49,7 +54,7 @@ class GameView extends View implements Runnable {
         }
 
         private RefreshHandler mRedrawHandler = null;
-        Ball ball=new Ball();
+        public static Ball ball=new Ball();
         List<Player> mPlayerList;
         List<Player> PlayerList;
 
@@ -486,6 +491,31 @@ class GameView extends View implements Runnable {
         private int eventX;
        // private int eventY;
         private float dx = 0;
+
+        public void update_playerDx(List<Player> player_list,float dx){
+                //相减
+                if ((player_list.get(0).x + dx > 0) && (player_list.get(2).x + dx < MaxRight)) {
+                        player_list.get(0).update(dx);
+                        player_list.get(1).update(dx);
+                        player_list.get(2).update(dx);
+                }
+                if ((player_list.get(3).x + dx*15/27 > 0)&&(player_list.get(6).x + dx*15/27 < MaxRight)){
+                        player_list.get(3).update(dx*15/27);
+                        player_list.get(4).update(dx*15/27);
+                        player_list.get(5).update(dx*15/27);
+                        player_list.get(6).update(dx*15/27);
+                }
+                //从上往下数第3排的限制条件
+                if ((player_list.get(7).x + dx*43/27 > 0)&&(player_list.get(8).x + dx*43/27 < MaxRight)){
+                        player_list.get(7).update(dx*43/27);
+                        player_list.get(8).update(dx*43/27);
+                }
+                if((player_list.get(9).x + dx > windowWidth * 3/10)&&(player_list.get(9).x + dx < windowWidth * 51/80)) {
+                        player_list.get(9).update(dx);
+                }
+        }
+
+
         @Override
         public boolean onTouchEvent(MotionEvent event) {
 
@@ -507,26 +537,9 @@ class GameView extends View implements Runnable {
                                 //Log.d("aaa", "onTouch: "+dx+"  "+eventX+"  "+lastX);
                                 //float First_left = mPlayerList.get(0).dx + dx;
 
-                                //相减
-                                if ((mPlayerList.get(0).x + dx > 0) && (mPlayerList.get(2).x + dx < MaxRight)) {
-                                        mPlayerList.get(0).update(dx);
-                                        mPlayerList.get(1).update(dx);
-                                        mPlayerList.get(2).update(dx);
-                                }
-                                if ((mPlayerList.get(3).x + dx*15/27 > 0)&&(mPlayerList.get(6).x + dx*15/27 < MaxRight)){
-                                        mPlayerList.get(3).update(dx*15/27);
-                                        mPlayerList.get(4).update(dx*15/27);
-                                        mPlayerList.get(5).update(dx*15/27);
-                                        mPlayerList.get(6).update(dx*15/27);
-                                }
-                                //从上往下数第3排的限制条件
-                                if ((mPlayerList.get(7).x + dx*43/27 > 0)&&(mPlayerList.get(8).x + dx*43/27 < MaxRight)){
-                                        mPlayerList.get(7).update(dx*43/27);
-                                        mPlayerList.get(8).update(dx*43/27);
-                                }
-                                if((mPlayerList.get(9).x + dx > windowWidth * 3/10)&&(mPlayerList.get(9).x + dx < windowWidth * 51/80)) {
-                                        mPlayerList.get(9).update(dx);
-                                }
+                                mPlayerDx = dx;
+                                update_playerDx(mPlayerList,dx);
+
                                 break;
                         }
                         default:break;
