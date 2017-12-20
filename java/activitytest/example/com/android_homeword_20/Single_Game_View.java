@@ -1,8 +1,12 @@
 package activitytest.example.com.android_homeword_20;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +23,10 @@ public class Single_Game_View extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     private ImageView top;
-    private TextView bottom;
+    private View bottom;
+    private Button music;
+    private Intent intent;
+    private int button_on_off;//用于判断音乐开关的开闭
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +57,19 @@ public class Single_Game_View extends AppCompatActivity {
 
         bottom = new TextView(this);
 
+        music = new Button(this);
         //填充4个子View
         myGroupView.addView(gameView, 0);
         myGroupView.addView(left_viewGroup, 1);
         myGroupView.addView(top, 2);
         myGroupView.addView(bottom,3);
-
+        myGroupView.addView(music,4);
         setContentView(myGroupView);
+
+        intent = new Intent(this, MyService.class);
+        startService(intent);
+        button_on_off = 1;
+        music.setBackgroundResource(R.drawable.on);
 
         gameView.setMyListener(new GameView.MyListener() {
             @Override
@@ -71,5 +84,44 @@ public class Single_Game_View extends AppCompatActivity {
                 textView3.setText(Integer.toString(gameView.getScore()));
             }
         });
+
+        music.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(button_on_off == 1){
+                    stopService(intent);
+                    button_on_off = 0;
+                    music.setBackgroundResource(R.drawable.off);
+
+                }else if(button_on_off == 0){
+                    startService(intent);
+                    button_on_off = 1;
+                    music.setBackgroundResource(R.drawable.on);
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(button_on_off == 1){
+            startService(intent);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopService(intent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+            stopService(intent);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

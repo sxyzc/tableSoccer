@@ -31,11 +31,14 @@ public class All_ViewGroup extends ViewGroup {
 
         //上面的背景View
         temp = getChildAt(2);
-        temp.layout(windowWidth/5,0,windowWidth,windowHeight/10);
+        temp.layout(windowWidth*2/5,0,windowWidth,windowHeight/10);
 
         //下面的背景View
         temp = getChildAt(3);
         temp.layout(windowWidth/5,windowHeight*9/10,windowWidth,windowHeight);
+
+        temp = getChildAt(4);
+        temp.layout(windowWidth/5,0,windowWidth*2/5,windowHeight/10);
     }
 
     @Override
