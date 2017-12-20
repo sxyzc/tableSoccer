@@ -21,6 +21,7 @@ public class All_ViewGroup extends ViewGroup {
     //用于控制子View的位置
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        //设置gameView的位置
         View temp = getChildAt(0);
         temp.layout(windowWidth/5,windowHeight/10, windowWidth, windowHeight*9/10);
 

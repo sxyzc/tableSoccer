@@ -1,7 +1,5 @@
 package activitytest.example.com.android_homeword_20;
 
-
-import android.graphics.PorterDuff;
 import android.util.DisplayMetrics;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -19,6 +17,19 @@ import java.util.List;
 // 自定义视图类
 class GameView extends View implements Runnable {
 
+        //自定义监听
+        interface MyListener{
+                void notifyDataChage(int a);
+        }
+        private MyListener Listener;
+        private MyListener myListener;
+        public void setListener(MyListener listener){
+                Listener = listener;
+        }
+        public void setMyListener(MyListener listener){
+                myListener = listener;
+        }
+
         //定义该视图的宽高
         private int windowHeight;
         private int windowWidth;
@@ -28,7 +39,12 @@ class GameView extends View implements Runnable {
 
         //score为敌方得分，mScore为我方得分
         private int score=0,mScore=0;
-
+        public int getScore(){
+                return score;
+        }
+        public int getmScore(){
+                return mScore;
+        }
 
         private RefreshHandler mRedrawHandler = null;
         Ball ball=new Ball();
@@ -159,7 +175,7 @@ class GameView extends View implements Runnable {
                          if(nearP.x+nearP.dx>ball.x-100)dir=-1;}
                  else if(nearP.x+nearP.dx>ball.x)dir=-1;*/
                     //Log.d("aitest", "ai: @@@ "+pos+" "+ball.x+","+ball.y+"  "+(nearP.x+nearP.dx));
-                Log.d("aitest", "ai: @@@ "+pos+" "+logicDx+","+5*dir);
+                //Log.d("aitest", "ai: @@@ "+pos+" "+logicDx+","+5*dir);
 
                 logicDx += 5*dir;
                 float dx = logicDx;
@@ -197,13 +213,15 @@ class GameView extends View implements Runnable {
                 halfPlayerHeight = windowHeight/36/2;
                 halfPlayerWidth = windowWidth/16/2;
 
+                mScore = 0;
+                score = 0;
             //mPaint.setColor(Color.BLACK);
                 //定义己方球员和对方球员
                 mPlayerList = new ArrayList<>();
                 PlayerList = new ArrayList<>();
                 Player t1,t2,t3,t4,t5;
-                Log.d("bbb", "MyView: @@@ "+getHeight()+" "+getWidth());
-                Log.d("bbb", "MyView: ### "+windowWidth+" "+windowHeight);
+               // Log.d("bbb", "MyView: @@@ "+getHeight()+" "+getWidth());
+                //Log.d("bbb", "MyView: ### "+windowWidth+" "+windowHeight);
 
                 //这里开始设置球员的布局
                 //从上往下数第一行,三名进攻球员的位置
@@ -357,7 +375,9 @@ class GameView extends View implements Runnable {
                                 int topos =(int)(Math.random()*5)+10;
                                 ball.changeV(PlayerList.get(topos));continue;
                             }else if (to==-2) {
-                                Log.d("gameTest", "onDraw: 敌方进球了!");score++;ball.isCollided=1;continue;
+                                Log.d("gameTest", "onDraw: 敌方进球了!");score++;
+                                myListener.notifyDataChage(score);
+                                ball.isCollided=1;continue;
                             }
                                      /*int to=(int)(Math.random()*mPlayerList.size());
                                      while(mPlayerList.get(to)==player){
@@ -396,7 +416,10 @@ class GameView extends View implements Runnable {
                                                 int topos =(int)(Math.random()*5)+10;
                                                 ball.changeV(mPlayerList.get(topos));continue;
                                         }else if (to==-2) {
-                                            Log.d("gameTest", "onDraw: 我方进球了!");mScore++;ball.isCollided=1;continue;
+                                            Log.d("gameTest", "onDraw: 我方进球了!");mScore++;
+                                            Listener.notifyDataChage(mScore);
+                                            ball.isCollided=1;
+                                             continue;
                                         }
                              /*int to=(int)(Math.random()*mPlayerList.size());
                              while(mPlayerList.get(to)==player){
@@ -448,12 +471,12 @@ class GameView extends View implements Runnable {
                                 //球员能到的最右边
                                 MaxRight = windowWidth - halfPlayerWidth * 2;
                                 //看看这里的右侧数值有没有问题
-                                Log.d("aaa", "onTouch: "+"  "+eventX+"  "+lastX);
+                               // Log.d("aaa", "onTouch: "+"  "+eventX+"  "+lastX);
                                 break;
                         }
                         case MotionEvent.ACTION_MOVE:{
-                                dx = eventX - lastX;
-                                Log.d("aaa", "onTouch: "+dx+"  "+eventX+"  "+lastX);
+                                dx = (eventX - lastX)* 200/windowWidth ;
+                                //Log.d("aaa", "onTouch: "+dx+"  "+eventX+"  "+lastX);
                                 //float First_left = mPlayerList.get(0).dx + dx;
 
                                 //相减

@@ -22,21 +22,21 @@ public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+            super.onCreate(savedInstanceState);
 
-        //获得手机屏幕的高宽
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        windowHeight = displayMetrics.heightPixels;
-        windowWidth = displayMetrics.widthPixels;
+            //获得手机屏幕的高宽
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            windowHeight = displayMetrics.heightPixels;
+            windowWidth = displayMetrics.widthPixels;
 
-        //用于设置全屏显示
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+            //用于设置全屏显示
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            setContentView(R.layout.activity_main);
     }
 
     public void start_game(View c){
-        Intent intent = new Intent(MainActivity.this, Single_Game_View.class);
-        startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, Single_Game_View.class);
+            startActivity(intent);
     }
 }
