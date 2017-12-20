@@ -14,6 +14,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
+
 // 自定义视图类
 public class GameView extends View implements Runnable {
 
@@ -471,8 +473,10 @@ public class GameView extends View implements Runnable {
                                 if(GameView.this.ball.isCollided!=0) GameView.this.ball.isCollided++;//碰撞后的时间计数
                                 if(GameView.this.ball.isCollided>5) GameView.this.ball.isCollided=0;//碰撞超过一定时间回到初始状态
                                 if(scored_time==0){
-                                        GameView.this.ball.update(windowHeight, windowWidth);
-                                        aiLogic();
+                                        if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE) {
+                                                GameView.this.ball.update(windowHeight, windowWidth);
+                                                aiLogic();
+                                        }
                                 }else{
                                         scored_time++;
                                         if(scored_time==20){

@@ -31,6 +31,9 @@ import static activitytest.example.com.android_homeword_20.GameView.mPlayerDx;
 import static activitytest.example.com.android_homeword_20.GameView.PlayerDx;
 import static activitytest.example.com.android_homeword_20.GameView.ball;
 
+import static activitytest.example.com.android_homeword_20.MainActivity.windowWidth;
+import static activitytest.example.com.android_homeword_20.MainActivity.windowHeight;
+
 //import static activitytest.example.com.android_homeword_20.ViewCreated;
 
 //import cn.user0308.scutkicking.MainView;
@@ -56,6 +59,10 @@ public class TransportData {
     private BluetoothSocket ball_socket = null;
     private BluetoothSocket player_socket = null;
     private BluetoothSocket score_socket = null;
+
+    private BluetoothServerSocket ball_server_socket = null;
+    private BluetoothServerSocket player_server_socket = null;
+    private BluetoothServerSocket score_server_socket = null;
 
     private BluetoothDevice device = null;
     private readThread mreadThread = null;
@@ -123,9 +130,10 @@ public class TransportData {
 
         if (BluetoothMsg.isOpen) {
             //Toast.makeText(mContext, "连接已经打开，可以通信。如果要再建立连接，请先断开！", Toast.LENGTH_SHORT).show();
-            Log.d("TransportData","连接已经打开，可以通信。如果要再建立连接，请先断开！");
+            Log.d("BlueTest","连接已经打开，可以通信。如果要再建立连接，请先断开！");
             return;
         }
+
         if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT) {
             String address = BluetoothMsg.BlueToothAddress;
             if (!address.equals("null")) {
@@ -287,13 +295,13 @@ public class TransportData {
             try {
                 //创建一个Socket连接：只需要服务器在注册时的UUID号
                 // socket = device.createRfcommSocketToServiceRecord(BluetoothProtocols.OBEX_OBJECT_PUSH_PROTOCOL_UUID);
-                socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-                osocket = device.createRfcommSocketToServiceRecord(UUID.fromString("C83DA007-3A9F-4249-9A96-18CACE25F84D"));
-                cgetsocket = device.createRfcommSocketToServiceRecord(UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
+
 
                 player_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
                 ball_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("C83DA007-3A9F-4249-9A96-18CACE25F84D"));
                 score_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
+
+
 
                 //连接
                 Message msg2 = new Message();
@@ -301,29 +309,20 @@ public class TransportData {
                 msg2.what = 0;
                 LinkDetectedHandler.sendMessage(msg2);
 
-                socket.connect();
-                osocket.connect();
-                cgetsocket.connect();
 
                 Message msg = new Message();
                 msg.obj = "已经连接上服务端！可以发送信息。";
                 msg.what = 0;
                 LinkDetectedHandler.sendMessage(msg);
 
+                Log.d("BlueTest","客户端准备连接");
 
+                player_socket.connect();
+                ball_socket.connect();
+                score_socket.connect();
 
-                //发送数据给服务器，说明可以接收数据
-                try {
-                    OutputStream os = cgetsocket.getOutputStream();
-                    os.write("ok".getBytes());
-                    os.flush();
-                    Log.v("BTTest","success   dsgag");
-                } catch (IOException e) {
-                    // Log.e("connect", "", e);
-                    Log.v("BTTest","fail   dsgag");
-                }
                 connected2=true;//通
-                Log.v("LoadingTest","flag4");
+                Log.d("BlueTest","客户端已连接");
 
                 //启动接受数据
                 mreadThread = new readThread();
@@ -347,11 +346,11 @@ public class TransportData {
             try {
                     /* 创建一个蓝牙服务器
                      * 参数分别：服务器名称、UUID   */
-                mserverSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
+                player_server_socket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
                         UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-                oserverSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
+                ball_server_socket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
                         UUID.fromString("C83DA007-3A9F-4249-9A96-18CACE25F84D"));
-                stocSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
+                score_server_socket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
                         UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
                 //  00001101-0000-1000-8000-00805F9B34FB   C83DA007-3A9F-4249-9A96-18CACE25F84D 54B32C11-45BD-44A2-87BD-4DA72CB8E3EB
                 Log.d("server", "wait cilent connect...");
@@ -361,11 +360,12 @@ public class TransportData {
                 msg.what = 0;
                 LinkDetectedHandler.sendMessage(msg);
 
+                Log.d("BlueTest","服务器准备连接");
                     /* 接受客户端的连接请求 */
-                socket = mserverSocket.accept();
-                osocket = oserverSocket.accept();
-                cgetsocket = stocSocket.accept();
-                Log.d("server", "accept success !");
+                player_socket = player_server_socket.accept();
+                ball_socket = ball_server_socket.accept();
+                score_socket = score_server_socket.accept();
+                Log.d("BlueTest","服务器已连接");
 
                 Message msg2 = new Message();
                 String info = "客户端已经连接上！可以发送信息。";
@@ -376,7 +376,7 @@ public class TransportData {
                 mreadThread = new readThread();
                 mreadThread.start();
                 connected2=true;//通
-                Log.v("LoadingTest","flag5");
+                Log.d("BlueTest","flag5");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -403,10 +403,11 @@ public class TransportData {
     }
 
     void sendBall(){
-        //写入角色数据
+        //写入球数据
         String msgText;
         //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
-        msgText = ball.x + "," + ball.y+",";
+        msgText = ball.x/windowWidth + "," + ball.y/windowHeight+",";
+        Log.d("BlueData","已发送:"+msgText);
         // else
         //    msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
         try {
@@ -417,7 +418,7 @@ public class TransportData {
         }
     }
 
-    Ball receiveBall()throws Exception{
+    void receiveBall()throws Exception{
         Ball res = new Ball();
         // Read from the InputStream
         byte[] buffer = new byte[128];
@@ -428,21 +429,23 @@ public class TransportData {
                 buf_data[i] = buffer[i];
             }
             String s = new String(buf_data);
+            Log.d("BlueData","已接收:"+s);
             String[] z = s.split(",");
             //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
             if (z.length > 0 && isDouble(z[0]))
-                ball.x=(float) (Double.parseDouble(z[0]));
+                ball.x=(float) (Double.parseDouble(z[0]))*windowWidth;
             if (z.length > 1 && isDouble(z[1]))
-                ball.y=(float)(Double.parseDouble(z[1]));
+                ball.y=(float)(Double.parseDouble(z[1]))*windowHeight;
         }
 
-        return res;
+        //return res;
     }
 
     //读取数据
     private class readThread extends Thread {
         @Override
         public void run() {
+            Log.d("BlueTest","读取线程启动");
 
             byte[] buffer = new byte[1024];
             int bytes;
@@ -459,7 +462,7 @@ public class TransportData {
 
                     sendPlayer();
                     PlayerDx = receivePlayer();
-                    if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)ball = receiveBall();
+                    if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)receiveBall();
                     else if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE)sendBall();
 
 

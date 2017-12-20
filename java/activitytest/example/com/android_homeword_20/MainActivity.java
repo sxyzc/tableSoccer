@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import activitytest.example.com.android_homeword_20.bluetooth.TransportData;
+
 public class MainActivity extends Activity {
 
     /*
@@ -19,6 +21,8 @@ public class MainActivity extends Activity {
 
     public static int windowHeight ;
     public static int windowWidth ;
+
+    public static TransportData TD;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,9 @@ public class MainActivity extends Activity {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.activity_main);
+
+        TD = new TransportData();
+        TD.openBluetooth();
     }
 
     public void start_game(View c){
