@@ -2,6 +2,8 @@ package activitytest.example.com.android_homeword_20;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import static activitytest.example.com.android_homeword_20.MainActivity.windowWidth;
+import static activitytest.example.com.android_homeword_20.MainActivity.windowHeight;
 
 public class Ball {
     public float vx,vy;//速度
@@ -16,6 +18,13 @@ public class Ball {
         vx = 20*2; vy = 10*2;
         x = 200; y = 200;
         r = 20;
+        r=(windowHeight *4/5) /72;
+    }
+
+    void init(){
+        vx=(windowHeight *4/5) /36;
+        vy=(windowHeight *4/5) /72;
+        //r=(windowHeight *4/5) /36;
     }
 
     public void myOnDraw(Canvas canvas, Paint paint){

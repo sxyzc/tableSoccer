@@ -72,7 +72,7 @@ public class GameView extends View implements Runnable {
         private void init(){
                 ball.x = mPlayerList.get(4).getCenterX();
                 ball.y = windowHeight/2;
-                ball.vx=20*2;ball.vy=10*2;
+                ball.init();
                 if(scored_who==0)ball.vy*=-1;
                 for (int i =0; i<mPlayerList.size();i++){
                         mPlayerList.get(i).dx=0;
@@ -486,9 +486,9 @@ public class GameView extends View implements Runnable {
         };
 
         //控制移动
-        private int lastX;
+        private float lastX;
         private int MaxRight;
-        private int eventX;
+        private float eventX;
        // private int eventY;
         private float dx = 0;
 
@@ -519,12 +519,12 @@ public class GameView extends View implements Runnable {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
 
-                eventX = (int)event.getRawX();
+                eventX = event.getRawX();
                 //eventY = (int)event.getRawY();
 
                 switch(event.getAction()){
                         case MotionEvent.ACTION_DOWN: {
-                                lastX = eventX - (int)dx;
+                                lastX = eventX - dx;
                                 //lastX = eventX;
                                 //球员能到的最右边
                                 MaxRight = windowWidth - halfPlayerWidth * 2;

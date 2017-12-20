@@ -74,7 +74,7 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
             public void onClick(View v) {
                 Log.d("SearchDeviceActivity","server click");
                 //Toast.makeText(MainActivity.sContext,"waiting for client",Toast.LENGTH_SHORT).show();
-                BluetoothMsg.serviceOrCilent= BluetoothMsg.ServerOrCilent.SERVICE;
+                BluetoothMsg.serverOrCilent= BluetoothMsg.ServerOrCilent.SERVICE;
             }
         });
         tobeclient.setOnClickListener(new OnClickListener() {//将btn_cancel按钮绑定在点击监听器上
@@ -83,7 +83,7 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
                 Log.d("SearchDeviceActivity","click click");
                 //不能用toast,因为此时MainActivity还没初始化,sContext为null
                 //Toast.makeText(MainActivity.sContext,"waiting for server",Toast.LENGTH_SHORT).show();
-                BluetoothMsg.serviceOrCilent=BluetoothMsg.ServerOrCilent.CILENT;
+                BluetoothMsg.serverOrCilent=BluetoothMsg.ServerOrCilent.CILENT;
             }
         });
     }

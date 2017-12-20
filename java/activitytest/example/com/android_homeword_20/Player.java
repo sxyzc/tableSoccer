@@ -7,11 +7,11 @@ import static activitytest.example.com.android_homeword_20.MainActivity.windowHe
 
 public class Player {
     float x,y;//位置
-    int pHeight =  (windowHeight *4/5) /36;
-    int pWidth = (windowWidth * 4/5) / 16;
+    float pHeight =  (windowHeight *4/5) /36;
+    float pWidth = (windowWidth * 4/5) / 16;
     float dx;//偏移量
 
-    public Player(int px, int py){  //设置默认值
+    public Player(float px, float py){  //设置默认值
         x = px;
         y = py;
     }
