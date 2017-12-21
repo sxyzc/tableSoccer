@@ -482,7 +482,9 @@ public class GameView extends View implements Runnable {
                                                 aiLogic();
                                         }
                                         if(BluetoothMsg.isOpen){
-                                                update_playerDx(PlayerList,PlayerDx);
+                                            if(BluetoothMsg.serverOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
+                                                update_playerDx(mPlayerList,mPlayerDx);
+                                            else update_playerDx(PlayerList,PlayerDx);
                                         }
                                 }else{
                                         scored_time++;
@@ -548,8 +550,14 @@ public class GameView extends View implements Runnable {
                                 //Log.d("aaa", "onTouch: "+dx+"  "+eventX+"  "+lastX);
                                 //float First_left = mPlayerList.get(0).dx + dx;
 
-                                mPlayerDx = dx;
-                                update_playerDx(mPlayerList,dx);
+                                if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT){
+                                        PlayerDx = dx;
+                                        update_playerDx(PlayerList, dx);
+
+                                }else {
+                                        mPlayerDx = dx;
+                                        update_playerDx(mPlayerList, dx);
+                                }
 
                                 break;
                         }

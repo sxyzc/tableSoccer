@@ -320,8 +320,9 @@ public class TransportData {
     void sendPlayer(){
         //写入球员dx数据
         String msgText;
-        //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
-        msgText = mPlayerDx/windowWidth + "," ;
+        if(BluetoothMsg.serverOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
+            msgText = PlayerDx/windowWidth + "," ;
+        else msgText = mPlayerDx/windowWidth + "," ;
         Log.d("BlueData","已发送:"+msgText);
         // else
         //    msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
@@ -346,7 +347,9 @@ public class TransportData {
             String[] z = s.split(",");
 
             if (z.length > 0 && isDouble(z[0]))
-                PlayerDx=(float) (Double.parseDouble(z[0]))*windowWidth;
+                if(BluetoothMsg.serverOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
+                    mPlayerDx=(float) (Double.parseDouble(z[0]))*windowWidth;
+                else PlayerDx=(float) (Double.parseDouble(z[0]))*windowWidth;
         }
     }
 
