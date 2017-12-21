@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 import android.app.Activity;;
 import android.content.Intent;
@@ -13,12 +14,14 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class show_records extends Activity {
     private MydatabaseHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +48,25 @@ public class show_records extends Activity {
         TextView text4 = (TextView)findViewById(R.id.textView4);
         TextView text5 = (TextView)findViewById(R.id.textView5);
         TextView text6 = (TextView)findViewById(R.id.textView6);
+        TextView text7 = (TextView)findViewById(R.id.textView12);
+        ImageView achievement = (ImageView)findViewById(R.id.imageView);
         text1.setText("单场次最高分："+i1);
         text2.setText("总进球数："+i2);
         text3.setText("总游玩场次："+i3);
         text4.setText("总胜利场次："+i4);
         text5.setText("总失败场次："+i5);
         text6.setText("总平局场次："+i6);
+        LevelListDrawable levelListDrawable = (LevelListDrawable)achievement.getDrawable();
+        levelListDrawable.setLevel(total_point);
+        if(total_point>=0||total_point<50){
+            text7.setText("暂无称号");
+        }else if(total_point>49||total_point<101){
+            text7.setText("青铜射手");
+        }else if(total_point>100||total_point<201){
+            text7.setText("白银射手");
+        }else {
+            text7.setText("黄金射手");
+        }
 
 
     }
@@ -72,6 +88,10 @@ public class show_records extends Activity {
         values.clear();
         Toast.makeText(getApplicationContext(),"用户数据删除",Toast.LENGTH_SHORT).show();
         this.finish();
+    }
+
+    public void change(View v){
+
     }
 }
 

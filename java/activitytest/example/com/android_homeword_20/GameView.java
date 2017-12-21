@@ -1,5 +1,7 @@
 package activitytest.example.com.android_homeword_20;
 
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.util.DisplayMetrics;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 
 import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
 
@@ -20,6 +24,19 @@ import static activitytest.example.com.android_homeword_20.Single_Game_View.View
 
 // 自定义视图类
 public class GameView extends View implements Runnable {
+
+
+        //这里用于写踢球时候有声音的操作
+        private SoundPool soundPool;
+        private HashMap<Integer, Integer> soundMap;
+        public void setKickMusic(SoundPool soundPool_, HashMap<Integer, Integer> soundMap_){
+                this.soundPool = soundPool_;
+                this.soundMap = soundMap_;
+        }
+        private int music_se;
+        public void setMusic_se(int a){
+                music_se = a;
+        }
 
         //自定义监听
         interface MyListener{
@@ -77,6 +94,8 @@ public class GameView extends View implements Runnable {
                 return -1;
         }
         private void init(){
+                Log.d("fffffffffffffffffffffffffff","fffffffffffffffffffffffffffffffff"
+                );
                 ball.x = mPlayerList.get(4).getCenterX();
                 ball.y = windowHeight/2;
                 ball.init();
@@ -201,7 +220,8 @@ public class GameView extends View implements Runnable {
                     //Log.d("aitest", "ai: @@@ "+pos+" "+ball.x+","+ball.y+"  "+(nearP.x+nearP.dx));
                 //Log.d("aitest", "ai: @@@ "+pos+" "+logicDx+","+5*dir);
 
-                logicDx += 5*dir;
+                //速度
+                logicDx += 7*dir;
                 float dx = logicDx;
 
                 //相减
@@ -228,6 +248,9 @@ public class GameView extends View implements Runnable {
         // 构造方法
         public GameView(Context context) {
                 super(context);
+
+
+
                 isRun =true;
                 //获得手机屏幕的高宽，初始化游戏界面的宽高
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -448,7 +471,13 @@ public class GameView extends View implements Runnable {
                                 }
                         }
 
-                    if(colliged)ballp.setColor(Color.RED);
+                    if(colliged){
+                                if(music_se == 1){
+                                        soundPool.play(soundMap.get(3), 1, 1, 0, 0, 1);
+                                }
+
+                                ballp.setColor(Color.RED);
+                    }
                     else ballp.setColor(Color.YELLOW);
 
                     // 画球

@@ -2,6 +2,7 @@ package activitytest.example.com.android_homeword_20;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -39,9 +40,11 @@ public class Single_Game_View extends AppCompatActivity {
     private TextView textView4;
     private ImageView top;
     private View bottom;
-    private Button music;
+    private Button button_music;
+    private Button button_se;
     private Intent intent;
     private int button_on_off;//用于判断音乐开关的开闭
+    private int button_on_off_se;
     private SoundPool soundPool;
     private Chronometer chronometer;
     private MydatabaseHelper dbHelper;
@@ -51,6 +54,12 @@ public class Single_Game_View extends AppCompatActivity {
     public static boolean ViewCreated = false;//标记View是否已经可见（避免蓝牙在View不可见时传数据）
     private LoadingThread loadingThread;//判断连接是否成功的线程
     private Handler loadingHandler;//改动setviewcontent的Handler
+
+    private int diff;
+    private int bgm_st;
+    private int bgm_sl;
+    private int se;
+    private int time;
 
     private class LoadingThread extends Thread {
         @Override
@@ -69,6 +78,8 @@ public class Single_Game_View extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initDB();
 
         //初始化总GroupView类
         myGroupView = new All_ViewGroup(this);
@@ -100,15 +111,15 @@ public class Single_Game_View extends AppCompatActivity {
 
         bottom = new TextView(this);
 
-        music = new Button(this);
+        button_music = new Button(this);
+        button_se = new Button(this);
 
-
-        //填充4个子View
         myGroupView.addView(gameView, 0);
         myGroupView.addView(left_viewGroup, 1);
         myGroupView.addView(top, 2);
         myGroupView.addView(bottom,3);
-        myGroupView.addView(music,4);
+        myGroupView.addView(button_music,4);
+        myGroupView.addView(button_se,5);
 
         sContext = this;
         ViewCreated = false;
@@ -134,23 +145,39 @@ public class Single_Game_View extends AppCompatActivity {
             };
         }
 
+        //初始化intent
         intent = new Intent(this, activitytest.example.com.android_homeword_20.Service.MyService.class);
-        startService(intent);
-        button_on_off = 1;
-        music.setBackgroundResource(R.drawable.on);
+
+        //获取音乐
+        button_on_off = bgm_st;
+        if(button_on_off == 1) {
+            button_music.setBackgroundResource(R.drawable.openmusic);
+            startService(intent);
+        }else {
+            button_music.setBackgroundResource(R.drawable.closemusic);
+        }
+        //获取音效
+        button_on_off_se = se;
+        if(button_on_off_se == 1){
+            button_se.setBackgroundResource(R.drawable.on);
+        }else {
+            button_se.setBackgroundResource(R.drawable.off);
+        }
+
 
         soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
         final HashMap<Integer, Integer> soundMap = new HashMap<Integer, Integer>();
-        soundMap.put(1,soundPool.load(this,R.raw.goal,1));
-        soundMap.put(2,soundPool.load(this,R.raw.lost_ball,1));
-
-
+        soundMap.put(1,soundPool.load(this,R.raw.cheer,2));
+        soundMap.put(2,soundPool.load(this,R.raw.sigh,2));
+        soundMap.put(3,soundPool.load(this,R.raw.kick,1));
 
         gameView.setMyListener(new GameView.MyListener() {
             @Override
             public void notifyDataChage(int a) {
                 textView1.setText(Integer.toString(gameView.getScore()));
-                soundPool.play(soundMap.get(2),1,1,0,0,1);
+                if(se == 1){
+                    soundPool.play(soundMap.get(2),1,1,0,0,1);
+                }
             }
         });
 
@@ -158,92 +185,67 @@ public class Single_Game_View extends AppCompatActivity {
             @Override
             public void notifyDataChage(int a) {
                 textView3.setText(Integer.toString(gameView.getmScore()));
-                soundPool.play(soundMap.get(1),1,1,0,0,1);
+                if(se == 1) {
+                    soundPool.play(soundMap.get(1), 1, 1, 0, 0, 1);
+                }
             }
         });
 
-        music.setOnClickListener(new View.OnClickListener() {
+        button_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(button_on_off == 1){
                     stopService(intent);
                     button_on_off = 0;
-                    music.setBackgroundResource(R.drawable.off);
-                }else if(button_on_off == 0){
+                    button_music.setBackgroundResource(R.drawable.closemusic);
+                }else{
                     startService(intent);
                     button_on_off = 1;
-                    music.setBackgroundResource(R.drawable.on);
+                    button_music.setBackgroundResource(R.drawable.openmusic);
                 }
             }
         });
 
+        button_se.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(button_on_off_se == 1){
+                    button_on_off_se = 0;
+                    button_se.setBackgroundResource(R.drawable.off);
+                    gameView.setMusic_se(0);
+                }else{
+                    button_on_off_se = 1;
+                    button_se.setBackgroundResource(R.drawable.on);
+                    gameView.setMusic_se(1);
+                }
+            }
+        });
+
+
+        gameView.setMusic_se(button_on_off_se);
+        gameView.setKickMusic(soundPool,soundMap);
     }
 
     public class OnChronometerTickListenerImpl implements Chronometer.OnChronometerTickListener {
         @Override
         public void onChronometerTick(Chronometer chronometer) {
             String time = chronometer.getText().toString();
-            if("00:05".equals(time)){//判断什么时候比赛结束
+            if("10:10".equals(time)){//判断什么时候比赛结束
                 new AlertDialog.Builder(Single_Game_View.this)
                         .setTitle("游戏结束")
                         .setIcon(android.R.drawable.ic_dialog_info)
-                        .setPositiveButton("确定",null)
-                        .setNegativeButton("ff",null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Single_Game_View.this.finish();
+                            }
+                        })
                         .show();
-                Log.d("fffffff","fjfifjidjfijfifjfif");
                 //比赛结束后，
                 gameView.isRun =false;
-                int mScore = gameView.getmScore();
-                int Score = gameView.getScore();
-                dbHelper = new MydatabaseHelper(Single_Game_View.this,"GameRecord.db",null,3);
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                Cursor cursor = db.query("Record",null,null,null,null,null,null);
-                if(mScore > Score){
-                    //加上进了几个球
-                    //丢了几个球
-                    //胜场数++
-                    cursor.moveToFirst();
-                    int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
-                    int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
-                    if(mScore>max_point_in_one_stage){max_point_in_one_stage=mScore;}
-                    int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
-                    int num_of_win_stage = cursor.getInt(cursor.getColumnIndex("num_of_win_stage"));
-                    ContentValues values = new ContentValues();
-                    values.put("max_point_in_one_stage",max_point_in_one_stage);
-                    values.put("total_point",total_point+mScore);
-                    values.put("num_of_stage",num_of_stage+1);
-                    values.put("num_of_win_stage",num_of_win_stage+1);
-                    db.update("Record",values,null,null);
-                    values.clear();
-                }else if(mScore < Score){
-                    cursor.moveToFirst();
-                    int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
-                    int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
-                    if(mScore>max_point_in_one_stage){max_point_in_one_stage=mScore;}
-                    int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
-                    int num_of_loose_stage = cursor.getInt(cursor.getColumnIndex("num_of_loose_stage"));
-                    ContentValues values = new ContentValues();
-                    values.put("max_point_in_one_stage",max_point_in_one_stage);
-                    values.put("total_point",total_point+mScore);
-                    values.put("num_of_stage",num_of_stage+1);
-                    values.put("num_of_loose_stage",num_of_loose_stage+1);
-                    db.update("Record",values,null,null);
-                    values.clear();
-                }else {
-                    cursor.moveToFirst();
-                    int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
-                    int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
-                    if(mScore>max_point_in_one_stage){max_point_in_one_stage=mScore;}
-                    int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
-                    int num_of_equal_stage = cursor.getInt(cursor.getColumnIndex("num_of_equal_stage"));
-                    ContentValues values = new ContentValues();
-                    values.put("max_point_in_one_stage",max_point_in_one_stage);
-                    values.put("total_point",total_point+mScore);
-                    values.put("num_of_stage",num_of_stage+1);
-                    values.put("num_of_equal_stage",num_of_equal_stage+1);
-                    db.update("Record",values,null,null);
-                    values.clear();
-                }
+                chronometer.stop();
+                stopService(intent);
+                statistic_data();
             }
         }
     }
@@ -271,12 +273,68 @@ public class Single_Game_View extends AppCompatActivity {
         super.onDestroy();
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
             stopService(intent);
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void initDB(){
+        dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("setting",null,null,null,null,null,null);
+        cursor.moveToFirst();
+        diff=cursor.getInt(cursor.getColumnIndex("diffcult"));
+        bgm_st =cursor.getInt(cursor.getColumnIndex("music_bool"));
+        bgm_sl=cursor.getInt(cursor.getColumnIndex("music_select"));
+        se=cursor.getInt(cursor.getColumnIndex("yinxiao"));
+        time=cursor.getInt(cursor.getColumnIndex("time"));
+        cursor.close();
+    }
+
+    public void statistic_data(){
+        int mScore = gameView.getmScore();
+        int Score = gameView.getScore();
+        dbHelper = new MydatabaseHelper(Single_Game_View.this,"GameRecord.db",null,3);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("Record",null,null,null,null,null,null);
+        cursor.moveToFirst();
+        int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
+        int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
+        if(mScore>max_point_in_one_stage){max_point_in_one_stage=mScore;}
+        int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
+        ContentValues values = new ContentValues();
+        values.put("max_point_in_one_stage",max_point_in_one_stage);
+        values.put("total_point",total_point+mScore);
+        values.put("num_of_stage",num_of_stage+1);
+        db.update("Record",values,null,null);
+        values.clear();
+        cursor.moveToFirst();
+        if(mScore > Score){
+            //加上进了几个球
+            //丢了几个球
+            //胜场数++
+            int num_of_win_stage = cursor.getInt(cursor.getColumnIndex("num_of_win_stage"));
+            values.put("num_of_win_stage",num_of_win_stage+1);
+            db.update("Record",values,null,null);
+            values.clear();
+        }else if(mScore < Score){
+            int num_of_loose_stage = cursor.getInt(cursor.getColumnIndex("num_of_loose_stage"));
+            values.put("num_of_loose_stage",num_of_loose_stage+1);
+            db.update("Record",values,null,null);
+            values.clear();
+        }else {
+            int num_of_equal_stage = cursor.getInt(cursor.getColumnIndex("num_of_equal_stage"));
+            values.put("num_of_equal_stage",num_of_equal_stage+1);
+            db.update("Record",values,null,null);
+            values.clear();
+        }
+        cursor.close();
+        values.put("music_bool",button_on_off);
+        values.put("yinxiao",button_on_off_se);
+        db.update("setting",values,null,null);
+        values.clear();
     }
 }

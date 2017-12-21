@@ -28,7 +28,7 @@ public class All_ViewGroup extends ViewGroup {
 
         //上面的背景View
         temp = getChildAt(2);
-        temp.layout(MainActivity.windowWidth*2/5,0, MainActivity.windowWidth, MainActivity.windowHeight/10);
+        temp.layout(MainActivity.windowWidth*3/5,0, MainActivity.windowWidth, MainActivity.windowHeight/10);
 
         //下面的背景View
         temp = getChildAt(3);
@@ -36,6 +36,9 @@ public class All_ViewGroup extends ViewGroup {
 
         temp = getChildAt(4);
         temp.layout(MainActivity.windowWidth/5,0, MainActivity.windowWidth*2/5, MainActivity.windowHeight/10);
+
+        temp = getChildAt(5);
+        temp.layout(MainActivity.windowWidth*2/5,0, MainActivity.windowWidth*3/5, MainActivity.windowHeight/10);
     }
 
     @Override

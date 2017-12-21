@@ -1,6 +1,7 @@
 package activitytest.example.com.android_homeword_20;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class Ball {
     public float vx,vy;//速度
@@ -21,6 +22,8 @@ public class Ball {
     void init(){
         vx=(MainActivity.windowHeight *4/5) /48;
         vy=(MainActivity.windowHeight *4/5) /96;
+        Log.d("fffffffffffffffffffffffffffffff",Float.toString(vx));
+        Log.d("aaa",Float.toString(vy));
         //r=(windowHeight *4/5) /36;
     }
 
