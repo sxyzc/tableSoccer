@@ -34,34 +34,21 @@ public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-            //获得手机屏幕的高宽
-            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            windowHeight = displayMetrics.heightPixels;
-            windowWidth = displayMetrics.widthPixels;
+        //获得手机屏幕的高宽
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        windowHeight = displayMetrics.heightPixels;
+        windowWidth = displayMetrics.widthPixels;
 
-            //用于设置全屏显示
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            setContentView(R.layout.activity_main);
+        //用于设置全屏显示
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main);
 
-            button = findViewById(R.id.start_game);
+        button = findViewById(R.id.start_game);
 
-            //下面这一块到时候提取为databaseinit
-            //创建数据库
-            dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
-            dbHelper.getWritableDatabase();
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("max_point_in_one_stage",0);
-        values.put("total_point",0);
-        values.put("num_of_stage",0);
-        values.put("num_of_win_stage",0);
-        values.put("num_of_loose_stage",0);
-        values.put("num_of_equal_stage",0);
-        db.insert("Record",null,values);
-        values.clear();
+        initDataBase();
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +71,31 @@ public class MainActivity extends Activity {
                                 }).setNegativeButton("取消",null).show();
             }
         });
+    }
+
+    public void initDataBase(){
+        //下面这一块到时候提取为databaseinit
+        //创建数据库
+        dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
+        dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("max_point_in_one_stage",0);
+        values.put("total_point",0);
+        values.put("num_of_stage",0);
+        values.put("num_of_win_stage",0);
+        values.put("num_of_loose_stage",0);
+        values.put("num_of_equal_stage",0);
+        db.insert("Record",null,values);
+        values.clear();
+
+        values.put("diffcult",1);
+        values.put("music_bool",1);
+        values.put("music_select",1);
+        values.put("yinxiao",1);
+        values.put("time",2);
+        db.insert("setting",null,values);
+        values.clear();
     }
 
     //转跳到双人对战界面

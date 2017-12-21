@@ -3,8 +3,9 @@ package activitytest.example.com.android_homeword_20;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -12,9 +13,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import activitytest.example.com.android_homeword_20.R;
-
-public class setting extends AppCompatActivity {
+public class setting extends Activity {
     private MydatabaseHelper dbHelper;
     private RadioButton diff_l,diff_m,diff_h;
     private RadioButton bgm_on,bgm_off;
@@ -40,12 +39,36 @@ public class setting extends AppCompatActivity {
         t_30=(RadioButton)findViewById(R.id.radioButton20);
         t_60=(RadioButton)findViewById(R.id.radioButton21);
         t_120=(RadioButton)findViewById(R.id.radioButton22);
+        //初始化设置按钮
+        dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("setting",null,null,null,null,null,null);
+        cursor.moveToFirst();
+        int diff=cursor.getInt(cursor.getColumnIndex("diffcult"));
+        int bgm_st =cursor.getInt(cursor.getColumnIndex("music_bool"));
+        int bgm_sl=cursor.getInt(cursor.getColumnIndex("music_select"));
+        int se=cursor.getInt(cursor.getColumnIndex("yinxiao"));
+        int time=cursor.getInt(cursor.getColumnIndex("time"));
+        if(diff==1){diff_l.setChecked(true);}
+        if(diff==2){diff_m.setChecked(true);}
+        if(diff==3){diff_h.setChecked(true);}
+        if(bgm_st==1){bgm_on.setChecked(true);}
+        if(bgm_st==0){bgm_off.setChecked(true);}
+        if(bgm_sl==1){bgm_1.setChecked(true);}
+        if(bgm_sl==2){bgm_2.setChecked(true);}
+        if(bgm_sl==3){bgm_3.setChecked(true);}
+        if(se==1){se_on.setChecked(true);}
+        if(se==0){se_off.setChecked(true);}
+        if(time==1){t_30.setChecked(true);}
+        if(time==2){t_60.setChecked(true);}
+        if(time==3){t_120.setChecked(true);}
+        cursor.close();
         //设置一大堆监听器
         diff_l.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "低难度",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -60,7 +83,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "中难度",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -75,7 +98,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "高难度",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -90,7 +113,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "打开背景音乐",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -105,7 +128,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "关闭背景音乐",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -120,7 +143,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "第一首",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -135,7 +158,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "第二首",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -150,7 +173,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "第三首",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -165,7 +188,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "打开音效",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -180,7 +203,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "关闭音效",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -195,7 +218,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "30秒游戏时间",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -210,7 +233,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "1分钟游戏时间",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -225,7 +248,7 @@ public class setting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    Toast.makeText(setting.this, "2分钟游戏时间",Toast.LENGTH_SHORT).show();
+
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
@@ -240,21 +263,14 @@ public class setting extends AppCompatActivity {
     }
     public void default_setting(View a){
         Toast.makeText(setting.this, "回复默认设置",Toast.LENGTH_SHORT).show();
-        dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("diffcult",1);
-        values.put("music_bool",1);
-        values.put("music_select",1);
-        values.put("yinxiao",1);
-        values.put("time",2);
-        db.update("setting",values,null,null);
-        values.clear();
-        Intent intent = new Intent(setting.this, MainActivity.class);
-        startActivity(intent);
+        diff_l.setChecked(true);
+        bgm_on.setChecked(true);
+        bgm_1.setChecked(true);
+        se_on.setChecked(true);
+        t_60.setChecked(true);
+
     }
     public void back_to_main(View a){
-        Intent intent = new Intent(setting.this, MainActivity.class);
-        startActivity(intent);
+        this.finish();
     }
 }

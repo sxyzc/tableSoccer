@@ -1,20 +1,23 @@
 package activitytest.example.com.android_homeword_20;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
-;
+import android.app.Activity;;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import activitytest.example.com.android_homeword_20.R;
 
-
-public class show_records extends AppCompatActivity {
+public class show_records extends Activity {
     private MydatabaseHelper dbHelper;
 
     @Override
@@ -35,6 +38,7 @@ public class show_records extends AppCompatActivity {
         String i4=Integer.toString(num_of_win_stage);
         String i5=Integer.toString(cursor.getInt(cursor.getColumnIndex("num_of_loose_stage")));
         String i6=Integer.toString(cursor.getInt(cursor.getColumnIndex("num_of_equal_stage")));
+        cursor.close();
         TextView text1 = (TextView)findViewById(R.id.textView);
         TextView text2 = (TextView)findViewById(R.id.textView2);
         TextView text3 = (TextView)findViewById(R.id.textView3);
@@ -52,8 +56,7 @@ public class show_records extends AppCompatActivity {
     }
 
     public void back(View v) {
-        Intent intent = new Intent(show_records.this, MainActivity.class);
-        startActivity(intent);
+        this.finish();
     }
     public void deletedata(View v){
         dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
@@ -67,10 +70,8 @@ public class show_records extends AppCompatActivity {
         values.put("num_of_equal_stage",0);
         db.update("Record",values,null,null);
         values.clear();
-        /*
         Toast.makeText(getApplicationContext(),"用户数据删除",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(show_records.this, MainActivity.class);
-        startActivity(intent);*/
+        this.finish();
     }
 }
 
