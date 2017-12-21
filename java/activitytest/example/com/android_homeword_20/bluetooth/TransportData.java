@@ -26,6 +26,7 @@ import activitytest.example.com.android_homeword_20.Ball;
 //import static activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg.serverOrCilent;
 
 
+import static activitytest.example.com.android_homeword_20.GameView.isRun;
 import static activitytest.example.com.android_homeword_20.GameView.mPlayerDx;
 import static activitytest.example.com.android_homeword_20.GameView.PlayerDx;
 import static activitytest.example.com.android_homeword_20.GameView.ball;
@@ -400,7 +401,7 @@ public class TransportData {
                 player_os = player_socket.getOutputStream();
                 while(!ViewCreated);
                 while(true){
-
+                    while(!isRun);
                     if(shutFlag)break;
                     transfering=true;
 

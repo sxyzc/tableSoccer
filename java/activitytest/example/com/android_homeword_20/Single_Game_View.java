@@ -192,6 +192,7 @@ public class Single_Game_View extends AppCompatActivity {
                         .show();
                 Log.d("fffffff","fjfifjidjfijfifjfif");
                 //比赛结束后，
+                gameView.isRun =false;
                 int mScore = gameView.getmScore();
                 int Score = gameView.getScore();
                 dbHelper = new MydatabaseHelper(Single_Game_View.this,"GameRecord.db",null,3);
