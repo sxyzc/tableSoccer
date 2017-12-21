@@ -94,8 +94,7 @@ public class GameView extends View implements Runnable {
                 return -1;
         }
         private void init(){
-                Log.d("fffffffffffffffffffffffffff","fffffffffffffffffffffffffffffffff"
-                );
+
                 ball.x = mPlayerList.get(4).getCenterX();
                 ball.y = windowHeight/2;
                 ball.init();
@@ -360,11 +359,12 @@ public class GameView extends View implements Runnable {
         @Override
         public void run() {
 
-                while (!Thread.currentThread().isInterrupted()) {
+                while (!Thread.currentThread().isInterrupted()&&isRun) {
                         // 通过发送消息更新界面
                         Message m = new Message();
                         m.what = 0x101;
                         mRedrawHandler.sendMessage(m);
+                        Log.d("ballBug","线程进行中:"+Thread.currentThread().getId());
                         try {
                                 Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -483,6 +483,7 @@ public class GameView extends View implements Runnable {
                     // 画球
                     ball.myOnDraw(canvas, ballp);
                     if(!ViewCreated) ViewCreated = true;
+                   // Log.d("ballBug","球速："+ball.vx+" "+ball.vy+"   "+(ball.vx*ball.vx+ball.vy*ball.vy));
 
         }
 

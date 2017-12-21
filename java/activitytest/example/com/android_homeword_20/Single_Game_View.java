@@ -300,7 +300,7 @@ public class Single_Game_View extends AppCompatActivity {
 
         if (BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE)
             TD.closeBluetooth();
-
+        gameView.isRun =false;
         super.onDestroy();
     }
 
