@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
     public static int windowHeight ;
     public static int windowWidth ;
     private MydatabaseHelper dbHelper;
-    public static TransportData TD;
     private Button button;
 
     @Override
@@ -63,9 +62,7 @@ public class MainActivity extends Activity {
         values.put("num_of_equal_stage",0);
         db.insert("Record",null,values);
         values.clear();
-            //蓝牙
-        //TD = new TransportData();
-        //TD.openBluetooth();
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +88,8 @@ public class MainActivity extends Activity {
 
     //转跳到双人对战界面
     public void bluetooth_game(View c){
-
+        Intent intent= new Intent(MainActivity.this,SearchDeviceActivity.class);
+        startActivity(intent);
     }
 
     //转跳到个人数据界面

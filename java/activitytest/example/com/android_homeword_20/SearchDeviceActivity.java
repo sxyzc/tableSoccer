@@ -273,7 +273,7 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
 //                        }
 
                         //进入loading界面
-                        Intent in=new Intent(SearchDeviceActivity.this, MainActivity.class);
+                        Intent in=new Intent(SearchDeviceActivity.this, Single_Game_View.class);
                         startActivity(in);
 
 

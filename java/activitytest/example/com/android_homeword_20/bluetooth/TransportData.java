@@ -32,6 +32,7 @@ import static activitytest.example.com.android_homeword_20.GameView.ball;
 
 import static activitytest.example.com.android_homeword_20.MainActivity.windowWidth;
 import static activitytest.example.com.android_homeword_20.MainActivity.windowHeight;
+import static activitytest.example.com.android_homeword_20.Single_Game_View.ViewCreated;
 
 //import static activitytest.example.com.android_homeword_20.ViewCreated;
 
@@ -76,19 +77,6 @@ public class TransportData {
     }
 
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private Handler LinkDetectedHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            //Toast.makeText(mContext, (String)msg.obj, Toast.LENGTH_SHORT).show();
-           /* if (msg.what == 1) {
-                msgList.add((String) msg.obj);
-            } else {
-                msgList.add((String) msg.obj);
-            }
-           // mAdapter.notifyDataSetChanged();
-            mListView.setSelection(msgList.size() - 1);*/
-        }
-    };
 
     boolean isDouble(String str) {
         try {
@@ -151,7 +139,6 @@ public class TransportData {
         }
 
     }
-
 
     /* 停止服务器 */
     public void shutdownServer() {
@@ -235,6 +222,24 @@ public class TransportData {
         }.start();
     }
 
+
+    public void closeBluetooth() {
+
+        if (!BluetoothMsg.isOpen) {
+            Log.d("BlueTest","连接已经关闭！");
+            return;
+        }
+
+        if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT) {
+            shutdownClient();
+        } else if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE) {
+            shutdownServer();
+        }
+
+        BluetoothMsg.isOpen = false;
+        Log.d("BlueTest","蓝牙完全关闭！");
+    }
+
     //开启客户端
     private class clientThread extends Thread {
         @Override
@@ -249,19 +254,6 @@ public class TransportData {
                 //score_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
 
 
-
-                //连接
-                Message msg2 = new Message();
-                msg2.obj = "请稍候，正在连接服务器:" + BluetoothMsg.BlueToothAddress;
-                msg2.what = 0;
-                LinkDetectedHandler.sendMessage(msg2);
-
-
-                Message msg = new Message();
-                msg.obj = "已经连接上服务端！可以发送信息。";
-                msg.what = 0;
-                LinkDetectedHandler.sendMessage(msg);
-
                 Log.d("BlueTest","客户端准备连接");
 
                 player_socket.connect();
@@ -274,13 +266,9 @@ public class TransportData {
                 //启动接受数据
                 mreadThread = new readThread();
                 mreadThread.start();
-                Log.v("connect", "   readfinish");
+
             } catch (IOException e) {
-                Log.e("connect", "", e);
-                Message msg = new Message();
-                msg.obj = "连接服务端异常！断开连接重新试一试。";
-                msg.what = 0;
-                LinkDetectedHandler.sendMessage(msg);
+                Log.e("BlueTest", "客户端连接异常 ", e);
             }
         }
     }
@@ -300,12 +288,6 @@ public class TransportData {
                 //score_server_socket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(PROTOCOL_SCHEME_RFCOMM,
                 //        UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
                 //  00001101-0000-1000-8000-00805F9B34FB   C83DA007-3A9F-4249-9A96-18CACE25F84D 54B32C11-45BD-44A2-87BD-4DA72CB8E3EB
-                Log.d("server", "wait cilent connect...");
-
-                Message msg = new Message();
-                msg.obj = "请稍候，正在等待客户端的连接...";
-                msg.what = 0;
-                LinkDetectedHandler.sendMessage(msg);
 
                 Log.d("BlueTest","服务器准备连接");
                     /* 接受客户端的连接请求 */
@@ -314,11 +296,6 @@ public class TransportData {
                 //score_socket = score_server_socket.accept();
                 Log.d("BlueTest","服务器已连接");
 
-                Message msg2 = new Message();
-                String info = "客户端已经连接上！可以发送信息。";
-                msg2.obj = info;
-                msg.what = 0;
-                LinkDetectedHandler.sendMessage(msg2);
                 //启动接受数据
                 mreadThread = new readThread();
                 mreadThread.start();
@@ -333,11 +310,11 @@ public class TransportData {
 
     private InputStream player_is;
     private InputStream ball_is;
-    private InputStream score_is;
+    //private InputStream score_is;
 
     private  OutputStream player_os;
     private  OutputStream ball_os;
-    private  OutputStream score_os;
+    //private  OutputStream score_os;
 
 
     void sendPlayer(){
@@ -367,7 +344,7 @@ public class TransportData {
             String s = new String(buf_data);
             Log.d("BlueData","已接收:"+s);
             String[] z = s.split(",");
-            //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
+
             if (z.length > 0 && isDouble(z[0]))
                 PlayerDx=(float) (Double.parseDouble(z[0]))*windowWidth;
         }
@@ -376,11 +353,8 @@ public class TransportData {
     void sendBall(){
         //写入球数据
         String msgText;
-        //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
         msgText = ball.x/windowWidth + "," + ball.y/windowHeight+",";
         //Log.d("BlueData","已发送:"+msgText);
-        // else
-        //    msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
         try {
             ball_os.write(msgText.getBytes());
             ball_os.flush();
@@ -390,7 +364,6 @@ public class TransportData {
     }
 
     void receiveBall()throws Exception{
-        Ball res = new Ball();
         // Read from the InputStream
         byte[] buffer = new byte[128];
         int bytes;
@@ -409,7 +382,6 @@ public class TransportData {
                 ball.y=(float)(Double.parseDouble(z[1]))*windowHeight;
         }
 
-        //return res;
     }
 
     //读取数据
@@ -418,43 +390,30 @@ public class TransportData {
         public void run() {
             Log.d("BlueTest","读取线程启动");
 
-            byte[] buffer = new byte[1024];
-            int bytes;
-
             try {
                 ball_is = ball_socket.getInputStream();
                 ball_os = ball_socket.getOutputStream();
                 player_is = player_socket.getInputStream();
                 player_os = player_socket.getOutputStream();
-
+                while(!ViewCreated);
                 while(true){
+
+                    if(shutFlag)break;
+                    transfering=true;
 
                     sendPlayer();
                     receivePlayer();
                     if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)receiveBall();
                     else if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE)sendBall();
 
-
+                    transfering=false;
                 }
 
 
             }catch (Exception e){
-
+                Log.d("BlueTest","读取线程异常 ",e);
             }
 
-
-            while (true) {
-                if(shutFlag)break;
-                transfering=true;
-                /*try {
-                    Thread.sleep(50);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }*/
-                boolean ViewCreated = false;
-
-                transfering=false;
-            }
         }
     }
 

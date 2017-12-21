@@ -1,11 +1,14 @@
 package activitytest.example.com.android_homeword_20;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 import activitytest.example.com.android_homeword_20.R;
+import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
+import activitytest.example.com.android_homeword_20.bluetooth.TransportData;
 
 public class Single_Game_View extends AppCompatActivity {
 
@@ -40,6 +45,25 @@ public class Single_Game_View extends AppCompatActivity {
     private SoundPool soundPool;
     private Chronometer chronometer;
     private MydatabaseHelper dbHelper;
+
+    public static Context sContext;
+    public static TransportData TD;
+    public static boolean ViewCreated = false;//标记View是否已经可见（避免蓝牙在View不可见时传数据）
+    private LoadingThread loadingThread;//判断连接是否成功的线程
+    private Handler loadingHandler;//改动setviewcontent的Handler
+
+    private class LoadingThread extends Thread {
+        @Override
+        public void run() {
+            Log.d("LoadingTest", "Loading start");
+            Log.v("LoadingTest","flag1");
+            while(!TD.connected2);
+            Log.v("LoadingTest","flag2");
+            //setContentView(mainView);
+
+            loadingHandler.sendEmptyMessage(1);
+        }
+    }
 
 
     @Override
@@ -85,7 +109,30 @@ public class Single_Game_View extends AppCompatActivity {
         myGroupView.addView(top, 2);
         myGroupView.addView(bottom,3);
         myGroupView.addView(music,4);
-        setContentView(myGroupView);
+
+        sContext = this;
+        ViewCreated = false;
+        if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.NONE)
+            setContentView(myGroupView);
+        else{
+            TD = new TransportData();
+
+            TD.openBluetooth();
+            loadingThread=new LoadingThread();
+            loadingThread.start();
+            loadingHandler = new Handler()
+            {
+                @Override
+                public void handleMessage(Message msg)
+                {
+                    if(msg.what == 1)  // handler接收到相关的消息后
+                    {
+                        setContentView(myGroupView); // 显示真正的应用界面
+                        //ViewCreated=true;
+                    }
+                }
+            };
+        }
 
         intent = new Intent(this, activitytest.example.com.android_homeword_20.Service.MyService.class);
         startService(intent);
@@ -213,6 +260,16 @@ public class Single_Game_View extends AppCompatActivity {
         super.onStop();
         stopService(intent);
     }
+
+    protected void onDestroy() {
+        Log.v("MainActivity", "onDestroy");
+
+        if (BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE)
+            TD.closeBluetooth();
+
+        super.onDestroy();
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

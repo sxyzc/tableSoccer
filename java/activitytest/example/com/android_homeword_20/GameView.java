@@ -16,6 +16,8 @@ import java.util.List;
 
 import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
 
+import static activitytest.example.com.android_homeword_20.Single_Game_View.ViewCreated;
+
 // 自定义视图类
 public class GameView extends View implements Runnable {
 
@@ -458,11 +460,13 @@ public class GameView extends View implements Runnable {
                                 }
                         }
 
-            if(colliged)ballp.setColor(Color.RED);
-            else ballp.setColor(Color.YELLOW);
+                    if(colliged)ballp.setColor(Color.RED);
+                    else ballp.setColor(Color.YELLOW);
 
-            // 画球
-                        ball.myOnDraw(canvas, ballp);
+                    // 画球
+                    ball.myOnDraw(canvas, ballp);
+                    if(!ViewCreated) ViewCreated = true;
+
         }
 
         //更新界面处理器
