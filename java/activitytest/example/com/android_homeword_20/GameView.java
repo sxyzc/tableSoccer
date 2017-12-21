@@ -45,7 +45,7 @@ public class GameView extends View implements Runnable {
         private int halfPlayerWidth;
 
         //score为敌方得分，mScore为我方得分
-        private int score=0,mScore=0;
+        public int score=0,mScore=0;
         private int scored_time=0;
         private int scored_who=1;//0 for us, 1 for other
         public int getScore(){

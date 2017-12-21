@@ -4,7 +4,7 @@ package activitytest.example.com.android_homeword_20;
  * Created by samsung on 2017/12/20.
  */
 
-import activitytest.example.com.android_homeword_20.R;
+
 import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +32,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class SearchDeviceActivity extends Activity implements OnItemClickListener{
-
 
     private BluetoothAdapter blueadapter=null;
     private DeviceReceiver mydevice=new DeviceReceiver();

@@ -1,25 +1,25 @@
 package activitytest.example.com.android_homeword_20;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Handler;
-import android.support.v4.util.TimeUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+
+import activitytest.example.com.android_homeword_20.R;
 
 public class Single_Game_View extends AppCompatActivity {
 
@@ -39,6 +39,7 @@ public class Single_Game_View extends AppCompatActivity {
     private int button_on_off;//用于判断音乐开关的开闭
     private SoundPool soundPool;
     private Chronometer chronometer;
+    private MydatabaseHelper dbHelper;
 
 
     @Override
@@ -86,7 +87,7 @@ public class Single_Game_View extends AppCompatActivity {
         myGroupView.addView(music,4);
         setContentView(myGroupView);
 
-        intent = new Intent(this, MyService.class);
+        intent = new Intent(this, activitytest.example.com.android_homeword_20.Service.MyService.class);
         startService(intent);
         button_on_off = 1;
         music.setBackgroundResource(R.drawable.on);
@@ -146,14 +147,54 @@ public class Single_Game_View extends AppCompatActivity {
                 //比赛结束后，
                 int mScore = gameView.getmScore();
                 int Score = gameView.getScore();
+                dbHelper = new MydatabaseHelper(Single_Game_View.this,"GameRecord.db",null,3);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                Cursor cursor = db.query("Record",null,null,null,null,null,null);
                 if(mScore > Score){
                     //加上进了几个球
                     //丢了几个球
                     //胜场数++
+                    cursor.moveToFirst();
+                    int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
+                    int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
+                    if(mScore>max_point_in_one_stage){max_point_in_one_stage=mScore;}
+                    int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
+                    int num_of_win_stage = cursor.getInt(cursor.getColumnIndex("num_of_win_stage"));
+                    ContentValues values = new ContentValues();
+                    values.put("max_point_in_one_stage",max_point_in_one_stage);
+                    values.put("total_point",total_point+mScore);
+                    values.put("num_of_stage",num_of_stage+1);
+                    values.put("num_of_win_stage",num_of_win_stage+1);
+                    db.update("Record",values,null,null);
+                    values.clear();
                 }else if(mScore < Score){
-
+                    cursor.moveToFirst();
+                    int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
+                    int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
+                    if(mScore>max_point_in_one_stage){max_point_in_one_stage=mScore;}
+                    int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
+                    int num_of_loose_stage = cursor.getInt(cursor.getColumnIndex("num_of_loose_stage"));
+                    ContentValues values = new ContentValues();
+                    values.put("max_point_in_one_stage",max_point_in_one_stage);
+                    values.put("total_point",total_point+mScore);
+                    values.put("num_of_stage",num_of_stage+1);
+                    values.put("num_of_loose_stage",num_of_loose_stage+1);
+                    db.update("Record",values,null,null);
+                    values.clear();
                 }else {
-
+                    cursor.moveToFirst();
+                    int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
+                    int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
+                    if(mScore>max_point_in_one_stage){max_point_in_one_stage=mScore;}
+                    int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
+                    int num_of_equal_stage = cursor.getInt(cursor.getColumnIndex("num_of_equal_stage"));
+                    ContentValues values = new ContentValues();
+                    values.put("max_point_in_one_stage",max_point_in_one_stage);
+                    values.put("total_point",total_point+mScore);
+                    values.put("num_of_stage",num_of_stage+1);
+                    values.put("num_of_equal_stage",num_of_equal_stage+1);
+                    db.update("Record",values,null,null);
+                    values.clear();
                 }
             }
         }

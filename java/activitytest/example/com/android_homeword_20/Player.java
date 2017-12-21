@@ -2,13 +2,11 @@ package activitytest.example.com.android_homeword_20;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import static activitytest.example.com.android_homeword_20.MainActivity.windowWidth;
-import static activitytest.example.com.android_homeword_20.MainActivity.windowHeight;
 
 public class Player {
     float x,y;//位置
-    float pHeight =  (windowHeight *4/5) /36;
-    float pWidth = (windowWidth * 4/5) / 16;
+    float pHeight =  (MainActivity.windowHeight *4/5) /36;
+    float pWidth = (MainActivity.windowWidth * 4/5) / 16;
     float dx;//偏移量
 
     public Player(float px, float py){  //设置默认值
@@ -32,7 +30,7 @@ public class Player {
     }
 
     public void update(float dxx){  //更新球员位置
-        if(x+dxx>=0&&x+dxx<=windowWidth){
+        if(x+dxx>=0&&x+dxx<= MainActivity.windowWidth){
             dx=dxx;
         }
     }

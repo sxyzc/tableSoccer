@@ -1,33 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   >
+    android:background="@drawable/background">
 
     <Button
-        android:onClick="start_game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="开始游戏"/>
+        android:id="@+id/start_game"
+        android:layout_width="130sp"
+        android:layout_height="50sp"
+        android:layout_marginBottom="116dp"
+        android:backgroundTint="?android:attr/colorPressedHighlight"
+        android:text="@string/start_game"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.735"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <Button
         android:onClick="bluetooth_game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="蓝牙游戏"/>
-
-    <Button
-        android:onClick="data_"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="个人纪录"/>
+        android:layout_width="130sp"
+        android:layout_height="50sp"
+        android:layout_marginBottom="116dp"
+        android:backgroundTint="?android:attr/colorPressedHighlight"
+        android:text="@string/bluetooth_game"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.853"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <Button
         android:onClick="setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="设置"/>
+        android:layout_width="130sp"
+        android:layout_height="50sp"
+        android:layout_marginBottom="116dp"
+        android:backgroundTint="?android:attr/colorPressedHighlight"
+        android:text="@string/setting"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.979"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
-</LinearLayout>
+    <Button
+        android:onClick="data_"
+        android:layout_width="130sp"
+        android:layout_height="50sp"
+        android:backgroundTint="?android:attr/colorPressedHighlight"
+        android:text="@string/data"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.896"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
+</android.support.constraint.ConstraintLayout>

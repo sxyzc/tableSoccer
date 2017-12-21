@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.UUID;
 
 import activitytest.example.com.android_homeword_20.Ball;
-import activitytest.example.com.android_homeword_20.bluetooth.*;
 //import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg.ServerOrCilent;
 
 //import static activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg.serverOrCilent;

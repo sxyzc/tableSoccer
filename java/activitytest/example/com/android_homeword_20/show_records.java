@@ -1,0 +1,76 @@
+package activitytest.example.com.android_homeword_20;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+;
+import android.content.Intent;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import activitytest.example.com.android_homeword_20.R;
+
+
+public class show_records extends AppCompatActivity {
+    private MydatabaseHelper dbHelper;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_show_records);
+        dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
+       SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("Record",null,null,null,null,null,null);
+        cursor.moveToFirst();
+        int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
+        int total_point = cursor.getInt(cursor.getColumnIndex("total_point"));
+        int num_of_stage =cursor.getInt(cursor.getColumnIndex("num_of_stage"));
+        int num_of_win_stage = cursor.getInt(cursor.getColumnIndex("num_of_win_stage"));
+        String i1=Integer.toString(max_point_in_one_stage);
+        String i2=Integer.toString(total_point);
+        String i3=Integer.toString(num_of_stage);
+        String i4=Integer.toString(num_of_win_stage);
+        String i5=Integer.toString(cursor.getInt(cursor.getColumnIndex("num_of_loose_stage")));
+        String i6=Integer.toString(cursor.getInt(cursor.getColumnIndex("num_of_equal_stage")));
+        TextView text1 = (TextView)findViewById(R.id.textView);
+        TextView text2 = (TextView)findViewById(R.id.textView2);
+        TextView text3 = (TextView)findViewById(R.id.textView3);
+        TextView text4 = (TextView)findViewById(R.id.textView4);
+        TextView text5 = (TextView)findViewById(R.id.textView5);
+        TextView text6 = (TextView)findViewById(R.id.textView6);
+        text1.setText("单场次最高分："+i1);
+        text2.setText("总进球数："+i2);
+        text3.setText("总游玩场次："+i3);
+        text4.setText("总胜利场次："+i4);
+        text5.setText("总失败场次："+i5);
+        text6.setText("总平局场次："+i6);
+
+
+    }
+
+    public void back(View v) {
+        Intent intent = new Intent(show_records.this, MainActivity.class);
+        startActivity(intent);
+    }
+    public void deletedata(View v){
+        dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("max_point_in_one_stage",0);
+        values.put("total_point",0);
+        values.put("num_of_stage",0);
+        values.put("num_of_win_stage",0);
+        values.put("num_of_loose_stage",0);
+        values.put("num_of_equal_stage",0);
+        db.update("Record",values,null,null);
+        values.clear();
+        /*
+        Toast.makeText(getApplicationContext(),"用户数据删除",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(show_records.this, MainActivity.class);
+        startActivity(intent);*/
+    }
+}
+

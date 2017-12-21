@@ -14,23 +14,35 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+
+        </activity>
+        <activity
+            android:name=".Single_Game_View"
+            android:theme="@style/NoTitle" />
+        <activity android:name=".SearchDeviceActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".welcome" android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".Single_Game_View"
-            android:theme="@style/NoTitle" />
-        <activity
-            android:name=".SearchDeviceActivity" >
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
+        <activity android:name=".show_records" android:theme="@style/Theme.AppCompat" />
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+
+        <service android:name=".Service.MyService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <activity android:name=".setting" android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>
