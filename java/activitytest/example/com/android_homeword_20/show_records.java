@@ -90,8 +90,8 @@ public class show_records extends Activity {
         this.finish();
     }
 
-    public void change(View v){
-
+    public void tips(View v){
+        Toast.makeText(getApplicationContext(),"50~100青铜射手；100~200白银射手；200以上黄金射手",Toast.LENGTH_SHORT).show();
     }
 }
 

@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class Single_Game_View extends AppCompatActivity {
     private View bottom;
     private Button button_music;
     private Button button_se;
+    private Button button_pause;
     private Intent intent;
     private int button_on_off;//用于判断音乐开关的开闭
     private int button_on_off_se;
@@ -113,6 +115,7 @@ public class Single_Game_View extends AppCompatActivity {
 
         button_music = new Button(this);
         button_se = new Button(this);
+        button_pause = new Button(this);
 
         myGroupView.addView(gameView, 0);
         myGroupView.addView(left_viewGroup, 1);
@@ -120,6 +123,7 @@ public class Single_Game_View extends AppCompatActivity {
         myGroupView.addView(bottom,3);
         myGroupView.addView(button_music,4);
         myGroupView.addView(button_se,5);
+        myGroupView.addView(button_pause,6);
 
         sContext = this;
         ViewCreated = false;
@@ -221,6 +225,33 @@ public class Single_Game_View extends AppCompatActivity {
             }
         });
 
+        button_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameView.isRun = false;
+                chronometer.stop();
+                stopService(intent);
+                new AlertDialog.Builder(Single_Game_View.this)
+                        .setTitle("游戏暂停")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setPositiveButton("继续游戏", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                gameView.isRun = true;
+                                chronometer.setBase(convertStrTimeToLong(chronometer.getText().toString()));
+                                chronometer.start();
+                                startService(intent);
+                            }
+                        })
+                        .setNegativeButton("退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Single_Game_View.this.finish();
+                            }
+                        })
+                        .show();
+            }
+        });
 
         gameView.setMusic_se(button_on_off_se);
         gameView.setKickMusic(soundPool,soundMap);
@@ -336,5 +367,17 @@ public class Single_Game_View extends AppCompatActivity {
         values.put("yinxiao",button_on_off_se);
         db.update("setting",values,null,null);
         values.clear();
+    }
+
+    //用于暂停后恢复计时
+    protected long convertStrTimeToLong(String strTime){
+        String [] timeArry = strTime.split(":");
+        long longtime = 0;
+        if(timeArry.length == 2){
+            longtime = Integer.parseInt(timeArry[0])*1000*60+Integer.parseInt(timeArry[1])*1000;
+        }else if(timeArry.length == 3){
+            longtime = Integer.parseInt(timeArry[0])*1000*60*60+Integer.parseInt(timeArry[1])*1000*60+Integer.parseInt(timeArry[0])*1000;
+        }
+        return SystemClock.elapsedRealtime() - longtime;
     }
 }
