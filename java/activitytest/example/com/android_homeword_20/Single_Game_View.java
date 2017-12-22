@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -33,12 +35,11 @@ public class Single_Game_View extends AppCompatActivity {
     //初始化对象
     private All_ViewGroup myGroupView;
     private GameView gameView;
-    private Left_ViewGroup left_viewGroup;
-    private TextView textView0;
-    private TextView textView1;
-    private TextView textView3;
-    private TextView textView4;
-    private ImageView top;
+    private TextView top;
+    private TextView mS;
+    private TextView S;
+    private TextView player;
+    private TextView system;
     private View bottom;
     private Button button_music;
     private Button button_se;
@@ -76,8 +77,6 @@ public class Single_Game_View extends AppCompatActivity {
     }
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,31 +90,16 @@ public class Single_Game_View extends AppCompatActivity {
         //创建游戏View
         gameView = new GameView(this);
 
-        //左侧模块
-        left_viewGroup = new Left_ViewGroup(this);
-        textView0 = new TextView(this);
-        textView1 = new TextView(this);
-        textView3 = new TextView(this);
-        textView4 = new TextView(this);
-        textView1.setTextSize(50);
-        textView1.setText("0");
-        textView3.setText("0");
-
         //初始化计时器
         chronometer = new Chronometer(this);
+        chronometer.setTextSize(40);
+        chronometer.setTextColor(Color.WHITE);
+        chronometer.setGravity(Gravity.CENTER);
         chronometer.start();
         chronometer.setOnChronometerTickListener(new OnChronometerTickListenerImpl());
 
-        //向左侧GroupView添加子View
-        left_viewGroup.addView(textView0,0);
-        left_viewGroup.addView(textView1,1);
-        left_viewGroup.addView(chronometer,2);
-        left_viewGroup.addView(textView3,3);
-        left_viewGroup.addView(textView4,4);
-
         //上方View
-        top = new ImageView(this);
-        top.setBackgroundColor(555555555);
+        top = new TextView(this);
 
         //下方View
         bottom = new TextView(this);
@@ -125,14 +109,40 @@ public class Single_Game_View extends AppCompatActivity {
         button_se = new Button(this);
         button_pause = new Button(this);
 
+        mS = new TextView(this);
+        S = new TextView(this);
+        player = new TextView(this);
+        system = new TextView(this);
+        mS.setText("0");
+        mS.setGravity(Gravity.CENTER);
+        mS.setTextColor(Color.WHITE);
+        mS.setTextSize(40);
+        S.setText("0");
+        S.setGravity(Gravity.CENTER);
+        S.setTextColor(Color.WHITE);
+        S.setTextSize(40);
+        player.setText("Player");
+        player.setGravity(Gravity.CENTER);
+        player.setTextColor(Color.WHITE);
+        player.setTextSize(40);
+        system.setText("System");
+        system.setGravity(Gravity.CENTER);
+        system.setTextColor(Color.WHITE);
+        system.setTextSize(40);
+
         //向总ViewGroup里添加各个子View
         myGroupView.addView(gameView, 0);
-        myGroupView.addView(left_viewGroup, 1);
-        myGroupView.addView(top, 2);
-        myGroupView.addView(bottom,3);
-        myGroupView.addView(button_music,4);
-        myGroupView.addView(button_se,5);
-        myGroupView.addView(button_pause,6);
+        myGroupView.addView(chronometer, 1);
+        myGroupView.addView(button_music,2);
+        myGroupView.addView(button_se,3);
+        myGroupView.addView(button_pause,4);
+        myGroupView.addView(S,5);
+        myGroupView.addView(mS,6);
+        myGroupView.addView(player,7);
+        myGroupView.addView(system,8);
+
+
+
 
         sContext = this;
         ViewCreated = false;
@@ -165,17 +175,17 @@ public class Single_Game_View extends AppCompatActivity {
         //音乐按钮初始化
         button_on_off = bgm_st;
         if(button_on_off == 1) {
-            button_music.setBackgroundResource(R.drawable.openmusic);
+            button_music.setBackgroundResource(R.drawable.music_on);
             startService(intent);
         }else {
-            button_music.setBackgroundResource(R.drawable.closemusic);
+            button_music.setBackgroundResource(R.drawable.music_off);
         }
         //音效按钮初始化
         button_on_off_se = se;
         if(button_on_off_se == 1){
-            button_se.setBackgroundResource(R.drawable.on);
+            button_se.setBackgroundResource(R.drawable.se_on);
         }else {
-            button_se.setBackgroundResource(R.drawable.off);
+            button_se.setBackgroundResource(R.drawable.se_off);
         }
         //暂停按钮初始化
         button_pause.setBackgroundResource(R.drawable.pause);
@@ -191,7 +201,7 @@ public class Single_Game_View extends AppCompatActivity {
         gameView.setMyListener(new GameView.MyListener() {
             @Override
             public void notifyDataChage(int a) {
-                textView1.setText(Integer.toString(gameView.getScore()));
+                S.setText(Integer.toString(gameView.getScore()));
                 if(se == 1){
                     soundPool.play(soundMap.get(2),1,1,0,0,1);
                 }
@@ -202,7 +212,7 @@ public class Single_Game_View extends AppCompatActivity {
         gameView.setListener(new GameView.MyListener() {
             @Override
             public void notifyDataChage(int a) {
-                textView3.setText(Integer.toString(gameView.getmScore()));
+                mS.setText(Integer.toString(gameView.getmScore()));
                 if(se == 1) {
                     soundPool.play(soundMap.get(1), 1, 1, 0, 0, 1);
                 }
@@ -216,11 +226,11 @@ public class Single_Game_View extends AppCompatActivity {
                 if(button_on_off == 1){
                     stopService(intent);
                     button_on_off = 0;
-                    button_music.setBackgroundResource(R.drawable.closemusic);
+                    button_music.setBackgroundResource(R.drawable.music_off);
                 }else{
                     startService(intent);
                     button_on_off = 1;
-                    button_music.setBackgroundResource(R.drawable.openmusic);
+                    button_music.setBackgroundResource(R.drawable.music_on);
                 }
             }
         });
@@ -231,11 +241,11 @@ public class Single_Game_View extends AppCompatActivity {
             public void onClick(View v) {
                 if(button_on_off_se == 1){
                     button_on_off_se = 0;
-                    button_se.setBackgroundResource(R.drawable.off);
+                    button_se.setBackgroundResource(R.drawable.se_off);
                     gameView.setMusic_se(0);
                 }else{
                     button_on_off_se = 1;
-                    button_se.setBackgroundResource(R.drawable.on);
+                    button_se.setBackgroundResource(R.drawable.se_on);
                     gameView.setMusic_se(1);
                 }
             }
@@ -248,6 +258,7 @@ public class Single_Game_View extends AppCompatActivity {
                 gameView.isRun = false;
                 chronometer.stop();
                 stopService(intent);
+                button_pause.setBackgroundResource(R.drawable.pause_);
                 new AlertDialog.Builder(Single_Game_View.this)
                         .setTitle("游戏暂停")
                         .setIcon(android.R.drawable.ic_dialog_info)
@@ -258,7 +269,10 @@ public class Single_Game_View extends AppCompatActivity {
                                 gameView.reStart();
                                 chronometer.setBase(convertStrTimeToLong(chronometer.getText().toString()));
                                 chronometer.start();
-                                startService(intent);
+                                if(button_on_off == 1){
+                                    startService(intent);
+                                }
+                                button_pause.setBackgroundResource(R.drawable.pause);
                             }
                         })
                         .setNegativeButton("退出", new DialogInterface.OnClickListener() {
