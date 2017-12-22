@@ -177,7 +177,7 @@ public class setting extends Activity {
                     dbHelper = new MydatabaseHelper(setting.this,"GameRecord.db",null,3);
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
-                    values.put("music_select",1);
+                    values.put("music_select",3);
                     db.update("setting",values,null,null);
                     values.clear();
                 }

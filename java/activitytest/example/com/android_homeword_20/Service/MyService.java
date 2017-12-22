@@ -20,16 +20,23 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(mediaPlayer == null){
-            mediaPlayer = MediaPlayer.create(this, R.raw.music);
-            mediaPlayer.setLooping(true);
-            mediaPlayer.start();
-        }
     }
 
     //服务启动时调用
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        int temp = intent.getIntExtra("number",1);
+        if(mediaPlayer == null){
+            if(temp == 1){
+                mediaPlayer = MediaPlayer.create(this, R.raw.background_music1);
+            }else if(temp == 2){
+                mediaPlayer = MediaPlayer.create(this, R.raw.background_music2);
+            }else {
+                mediaPlayer = MediaPlayer.create(this, R.raw.background_music3);
+            }
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

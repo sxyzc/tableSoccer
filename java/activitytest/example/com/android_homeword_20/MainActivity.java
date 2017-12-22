@@ -20,13 +20,6 @@ import activitytest.example.com.android_homeword_20.bluetooth.TransportData;
 
 public class MainActivity extends Activity {
 
-    /*
-    int mposition = 1;//自己一方的位置，1表示左边是自己，-1表示右边是自己
-    public static int pHeight = 10;//球员高
-    public static int pWidth = 8;//球员宽
-   */
-    //感觉上面这一部分好像没有用到吧？
-
     public static int windowHeight ;
     public static int windowWidth ;
     private MydatabaseHelper dbHelper;
@@ -46,11 +39,11 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.start_game);
+        //button = findViewById(R.idh.start_game);
 
         initDataBase();
 
-
+    /*
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +63,7 @@ public class MainActivity extends Activity {
                                     }
                                 }).setNegativeButton("取消",null).show();
             }
-        });
+        });*/
     }
 
     public void initDataBase(){
@@ -96,6 +89,13 @@ public class MainActivity extends Activity {
         values.put("time",2);
         db.insert("setting",null,values);
         values.clear();
+    }
+
+
+    //转跳到单机游戏界面
+    public void start_game(View a){
+        Intent intent = new Intent(MainActivity.this,Single_Game_View.class);
+        startActivity(intent);
     }
 
     //转跳到双人对战界面

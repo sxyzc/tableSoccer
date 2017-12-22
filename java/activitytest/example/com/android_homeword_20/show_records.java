@@ -2,6 +2,7 @@ package activitytest.example.com.android_homeword_20;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.app.Activity;;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -22,13 +24,12 @@ import android.widget.Toast;
 public class show_records extends Activity {
     private MydatabaseHelper dbHelper;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_records);
         dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
-       SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query("Record",null,null,null,null,null,null);
         cursor.moveToFirst();
         int max_point_in_one_stage = cursor.getInt(cursor.getColumnIndex("max_point_in_one_stage"));
@@ -91,7 +92,13 @@ public class show_records extends Activity {
     }
 
     public void tips(View v){
-        Toast.makeText(getApplicationContext(),"50~100青铜射手；100~200白银射手；200以上黄金射手",Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(show_records.this)
+                .setTitle("称号说明")
+                //这里明天看看怎么过行
+                .setMessage("50~100青铜射手，100~200白银射手，200以上黄金射手")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton("ok", null)
+                .show();
     }
 }
 

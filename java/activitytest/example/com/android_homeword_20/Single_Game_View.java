@@ -151,6 +151,7 @@ public class Single_Game_View extends AppCompatActivity {
 
         //初始化intent
         intent = new Intent(this, activitytest.example.com.android_homeword_20.Service.MyService.class);
+        intent.putExtra("number",bgm_sl);
 
         //获取音乐
         button_on_off = bgm_st;
@@ -255,13 +256,23 @@ public class Single_Game_View extends AppCompatActivity {
 
         gameView.setMusic_se(button_on_off_se);
         gameView.setKickMusic(soundPool,soundMap);
+        gameView.setDiff(diff);
     }
 
     public class OnChronometerTickListenerImpl implements Chronometer.OnChronometerTickListener {
         @Override
         public void onChronometerTick(Chronometer chronometer) {
-            String time = chronometer.getText().toString();
-            if("10:10".equals(time)){//判断什么时候比赛结束
+            String time_ = chronometer.getText().toString();
+            int gameTime =  time;
+            String gameTime_ ;
+            if(gameTime == 1){
+                gameTime_ = "00:30";
+            }else if(gameTime == 2){
+                gameTime_ = "01:00";
+            }else {
+                gameTime_ = "02:00";
+            }
+            if(gameTime_.equals(time_)){//判断什么时候比赛结束
                 new AlertDialog.Builder(Single_Game_View.this)
                         .setTitle("游戏结束")
                         .setIcon(android.R.drawable.ic_dialog_info)
@@ -300,7 +311,7 @@ public class Single_Game_View extends AppCompatActivity {
 
         if (BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE)
             TD.closeBluetooth();
-        gameView.isRun =false;
+            gameView.isRun = false;
         super.onDestroy();
     }
 
