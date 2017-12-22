@@ -86,6 +86,7 @@ public class Single_Game_View extends AppCompatActivity {
 
         //初始化总GroupView类
         myGroupView = new All_ViewGroup(this);
+        myGroupView.setBackgroundResource(R.drawable.game_background);
 
         //创建游戏View
         gameView = new GameView(this);
@@ -96,6 +97,9 @@ public class Single_Game_View extends AppCompatActivity {
         textView1 = new TextView(this);
         textView3 = new TextView(this);
         textView4 = new TextView(this);
+        textView1.setTextSize(50);
+        textView1.setText("0");
+        textView3.setText("0");
 
         //初始化计时器
         chronometer = new Chronometer(this);
@@ -288,21 +292,50 @@ public class Single_Game_View extends AppCompatActivity {
                 gameTime_ = "02:00";
             }
             if(gameTime_.equals(time_)){//判断什么时候比赛结束
-                new AlertDialog.Builder(Single_Game_View.this)
-                        .setTitle("游戏结束")
-                        .setIcon(android.R.drawable.ic_dialog_info)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Single_Game_View.this.finish();
-                            }
-                        })
-                        .show();
+                int mScore = gameView.getmScore();
+                int Score = gameView.getScore();
+                if (mScore > Score){
+                    new AlertDialog.Builder(Single_Game_View.this)
+                            .setTitle("游戏结束")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Single_Game_View.this.finish();
+                                }
+                            })
+                            .setMessage("You win")
+                            .show();
+                }else if(mScore == Score){
+                    new AlertDialog.Builder(Single_Game_View.this)
+                            .setTitle("游戏结束")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Single_Game_View.this.finish();
+                                }
+                            })
+                            .setMessage("Ended in a draw")
+                            .show();
+                }else {
+                    new AlertDialog.Builder(Single_Game_View.this)
+                            .setTitle("游戏结束")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Single_Game_View.this.finish();
+                                }
+                            })
+                            .setMessage("You lost")
+                            .show();
+                }
                 //比赛结束后，
                 gameView.isRun =false;
                 chronometer.stop();
                 stopService(intent);
-                statistic_data();
+                statistic_data(mScore, Score);
             }
         }
     }
@@ -352,9 +385,7 @@ public class Single_Game_View extends AppCompatActivity {
         cursor.close();
     }
 
-    public void statistic_data(){
-        int mScore = gameView.getmScore();
-        int Score = gameView.getScore();
+    public void statistic_data(int mScore,int Score){
         dbHelper = new MydatabaseHelper(Single_Game_View.this,"GameRecord.db",null,3);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor cursor = db.query("Record",null,null,null,null,null,null);

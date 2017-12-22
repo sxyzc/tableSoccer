@@ -54,8 +54,8 @@ public class show_records extends Activity {
         text1.setText("单场次最高分："+i1);
         text2.setText("总进球数："+i2);
         text3.setText("总游玩场次："+i3);
-        text4.setText("总胜利场次："+i4);
-        text5.setText("总失败场次："+i5);
+        text4.setText("总失败场次："+i5);
+        text5.setText("总胜利场次："+i4);
         text6.setText("总平局场次："+i6);
         LevelListDrawable levelListDrawable = (LevelListDrawable)achievement.getDrawable();
         levelListDrawable.setLevel(total_point);
@@ -94,8 +94,7 @@ public class show_records extends Activity {
     public void tips(View v){
         new AlertDialog.Builder(show_records.this)
                 .setTitle("称号说明")
-                //这里明天看看怎么过行
-                .setMessage("50~100青铜射手，100~200白银射手，200以上黄金射手")
+                .setMessage("称号由历史总进球数决定\n总数超50个进球：青铜射手\n总数超100个进球：白银射手\n总数超200个进球：黄金射手")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setPositiveButton("ok", null)
                 .show();

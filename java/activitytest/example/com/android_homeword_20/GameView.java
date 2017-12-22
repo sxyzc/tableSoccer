@@ -487,7 +487,7 @@ public class GameView extends View implements Runnable {
         if (colliged) {
             if (music_se == 1) {
                 if(seTime==0) {
-                    Log.d("seTest",seTime+"     eeeeeeeeeeeeeee");
+                    //Log.d("seTest",seTime+"     eeeeeeeeeeeeeee");
                     seTime++;
                     soundPool.play(soundMap.get(3), 1, 1, 0, 0, 1);
                 }

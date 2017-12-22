@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/glassbackground"
     tools:context="activitytest.example.com.android_homeword_20.setting">
 
     <TextView
@@ -15,6 +16,7 @@
         android:gravity="center"
         android:text="难度"
         android:textSize="20dp"
+        android:background="@drawable/text_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,6 +25,7 @@
         android:layout_width="101dp"
         android:layout_height="33dp"
         android:layout_marginTop="28dp"
+        android:background="@drawable/text_background"
         android:text="背景音乐"
         android:gravity="center"
         android:textSize="20dp"
@@ -34,6 +37,7 @@
         android:layout_width="101dp"
         android:layout_height="33dp"
         android:layout_marginTop="28dp"
+        android:background="@drawable/text_background"
         android:text="音乐选择"
         android:gravity="center"
         android:textSize="20dp"
@@ -45,6 +49,7 @@
         android:layout_width="101dp"
         android:layout_height="33dp"
         android:layout_marginTop="28dp"
+        android:background="@drawable/text_background"
         android:text="背景音效"
         android:gravity="center"
         android:textSize="20dp"
@@ -56,6 +61,7 @@
         android:layout_width="101dp"
         android:layout_height="33dp"
         android:layout_marginTop="28dp"
+        android:background="@drawable/text_background"
         android:text="游戏时长"
         android:gravity="center"
         android:textSize="20dp"
@@ -68,9 +74,11 @@
         android:layout_height="46dp"
         android:layout_marginBottom="8dp"
         android:onClick="default_setting"
+
         android:text="恢复默认值"
         android:gravity="center"
         android:textSize="20dp"
+        android:backgroundTint="?android:attr/colorPressedHighlight"
         app:layout_constraintBottom_toTopOf="@+id/button13"
         app:layout_constraintEnd_toEndOf="@+id/button13" />
 
@@ -84,6 +92,7 @@
         android:text="返回"
         android:gravity="center"
         android:textSize="20dp"
+        android:backgroundTint="?android:attr/colorPressedHighlight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -93,7 +102,9 @@
         android:layout_height="33dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="88dp"
+        android:background="@drawable/setback"
         android:orientation="horizontal"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -127,6 +138,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="148dp"
         android:orientation="horizontal"
+        android:background="@drawable/setback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -152,6 +164,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="208dp"
         android:orientation="horizontal"
+        android:background="@drawable/setback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -184,6 +197,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="268dp"
         android:orientation="horizontal"
+        android:background="@drawable/setback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -209,6 +223,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="332dp"
         android:orientation="horizontal"
+        android:background="@drawable/setback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

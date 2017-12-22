@@ -1,9 +1,5 @@
 package activitytest.example.com.android_homeword_20;
 
-/**
- * Created by samsung on 2017/12/20.
- */
-
 
 import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
 import java.util.ArrayList;
