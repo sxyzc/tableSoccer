@@ -40,6 +40,7 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("BlueTest","create");
         //隐藏电池时间等
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -165,7 +166,7 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
                 adapter.notifyDataSetChanged();
             }
         }else{  //不存在已经配对过的蓝牙设备
-            deviceList.add("No can be matched to use bluetooth");
+            deviceList.add("没有匹配到蓝牙设备");
             adapter.notifyDataSetChanged();
         }
     }
@@ -189,11 +190,11 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
         public void onClick(View v) {
             if(blueadapter.isDiscovering()){
                 blueadapter.cancelDiscovery();
-                btserch.setText("repeat search");
+                btserch.setText("重新搜索");
             }else{
                 findAvalibleDevice();
                 blueadapter.startDiscovery();
-                btserch.setText("stop search");
+                btserch.setText("停止搜索");
             }
         }
     }
@@ -226,10 +227,10 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
 
                 if (deviceListview.getCount() == 0) {
                     deviceList.clear();
-                    deviceList.add("No can be matched to use bluetooth");
+                    deviceList.add("没有匹配到蓝牙设备");
                     adapter.notifyDataSetChanged();
                 }
-                btserch.setText("repeat search");
+                btserch.setText("重新搜索");
             }
         }
     }
@@ -245,13 +246,13 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
 
         if(blueadapter!=null&&blueadapter.isDiscovering()){
             blueadapter.cancelDiscovery();
-            btserch.setText("repeat search");
+            btserch.setText("重新搜索");
         }
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);// 定义一个弹出框对象
-        dialog.setTitle("Confirmed connecting device");
+        dialog.setTitle("确定连接该设备？");
         dialog.setMessage(msg);
-        dialog.setPositiveButton("connect",
+        dialog.setPositiveButton("连接",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -260,13 +261,6 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
                         if(BluetoothMsg.lastblueToothAddress!=BluetoothMsg.BlueToothAddress){
                             BluetoothMsg.lastblueToothAddress=BluetoothMsg.BlueToothAddress;
                         }
-                        //Maybe this should be replaced by loading
-//                        if(){//如果客户端连接上了,直接开始游戏,否则,Loading
-//
-//                        }else {
-//                            Intent in=new Intent(SearchDeviceActivity.this, LoadingActivity.class);
-//                            startActivity(in);
-//                        }
 
                         //进入loading界面
                         Intent in=new Intent(SearchDeviceActivity.this, Single_Game_View.class);
@@ -275,7 +269,7 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
 
                     }
                 });
-        dialog.setNegativeButton("cancel",
+        dialog.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

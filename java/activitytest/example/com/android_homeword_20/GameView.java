@@ -97,7 +97,7 @@ public class GameView extends View implements Runnable {
         if(i>=10)return -2;
         return -1;
     }
-    private void init(){
+    public void init(){
 
         ball.x = mPlayerList.get(4).getCenterX();
         ball.y = windowHeight/2;
@@ -444,10 +444,7 @@ public class GameView extends View implements Runnable {
                     ball.isCollided = 1;
                     continue;
                 }
-                /*int to=(int)(Math.random()*mPlayerList.size());
-                                    while(mPlayerList.get(to)==player){
-                                        to=(int)(Math.random()*mPlayerList.size());
-                                     }*/
+
                 ball.changeV(mPlayerList.get(to));
                 //ball.changeV(mPlayerList.get());
             }
@@ -498,6 +495,7 @@ public class GameView extends View implements Runnable {
         ball.myOnDraw(canvas, ballp);
         if (!ViewCreated) ViewCreated = true;
         // Log.d("ballBug","球速："+ball.vx+" "+ball.vy+"   "+(ball.vx*ball.vx+ball.vy*ball.vy));
+         //Log.d("ballBug","球："+ball.x+" "+ball.y+"   ");
     }
 
     //更新界面处理器

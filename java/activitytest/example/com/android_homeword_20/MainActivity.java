@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import activitytest.example.com.android_homeword_20.R;
+import activitytest.example.com.android_homeword_20.bluetooth.BluetoothMsg;
 import activitytest.example.com.android_homeword_20.bluetooth.TransportData;
 
 public class MainActivity extends Activity {
@@ -100,6 +101,7 @@ public class MainActivity extends Activity {
 
     //转跳到双人对战界面
     public void bluetooth_game(View c){
+        Log.d("BlueTest","ssssss");
         Intent intent= new Intent(MainActivity.this,SearchDeviceActivity.class);
         startActivity(intent);
     }
@@ -115,6 +117,12 @@ public class MainActivity extends Activity {
     public void setting(View a){
         Intent intent= new Intent(MainActivity.this,setting.class);
         startActivity(intent);
+    }
+
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("MainActivity","onRestart");
+        BluetoothMsg.serverOrCilent = BluetoothMsg.ServerOrCilent.NONE;
     }
 
     protected void onDestroy() {

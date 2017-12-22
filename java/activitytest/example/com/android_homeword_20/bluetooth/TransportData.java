@@ -35,35 +35,21 @@ import static activitytest.example.com.android_homeword_20.MainActivity.windowWi
 import static activitytest.example.com.android_homeword_20.MainActivity.windowHeight;
 import static activitytest.example.com.android_homeword_20.Single_Game_View.ViewCreated;
 
-//import static activitytest.example.com.android_homeword_20.ViewCreated;
-
-//import cn.user0308.scutkicking.MainView;
-
 public class TransportData {
 
     /* 一些常量，代表服务器的名称 */
     public static final String PROTOCOL_SCHEME_RFCOMM = "btspp";
-    static int sendcnt = 0;
-    private ListView mListView;
-    private ArrayAdapter<String> mAdapter;
-    //private MainView myview;
-    private List<String> msgList = new ArrayList<String>();
-    private BluetoothServerSocket mserverSocket = null;
-    private BluetoothServerSocket oserverSocket = null;
-    private BluetoothServerSocket stocSocket = null;
+
     private ServerThread startServerThread = null;
     private clientThread clientConnectThread = null;
-    private BluetoothSocket socket = null;
-    private BluetoothSocket osocket = null;
-    private BluetoothSocket cgetsocket = null;
 
     private BluetoothSocket ball_socket = null;
     private BluetoothSocket player_socket = null;
-    private BluetoothSocket score_socket = null;
+    //private BluetoothSocket score_socket = null;
 
     private BluetoothServerSocket ball_server_socket = null;
     private BluetoothServerSocket player_server_socket = null;
-    private BluetoothServerSocket score_server_socket = null;
+    //private BluetoothServerSocket score_server_socket = null;
 
     private BluetoothDevice device = null;
     private readThread mreadThread = null;
@@ -72,10 +58,6 @@ public class TransportData {
     private boolean shutFlag=false;
 
     public boolean connected2 = false;//标记连接是否通
-
-    public TransportData(){
-        //myview = (MainView) findViewById(R.id.myview);
-    }
 
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -88,36 +70,10 @@ public class TransportData {
         return false;
     }
 
-
-
-    private void disconnectBluetooth() {
-
-        /*  断开蓝牙过程
-        disconnectButton = (Button) findViewById(R.id.btn_disconnect);
-        disconnectButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-                if (BluetoothMsg.serviceOrCilent == BluetoothMsg.ServerOrCilent.CILENT) {
-                    shutdownClient();
-                } else if (BluetoothMsg.serviceOrCilent == BluetoothMsg.ServerOrCilent.SERVICE) {
-                    shutdownServer();
-                }
-                BluetoothMsg.isOpen = false;
-                BluetoothMsg.serviceOrCilent = BluetoothMsg.ServerOrCilent.NONE;
-                Toast.makeText(mContext, "已断开连接！", Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
-    }
-
-
     //开启服务连接
-
     public void openBluetooth() {
 
         if (BluetoothMsg.isOpen) {
-            //Toast.makeText(mContext, "连接已经打开，可以通信。如果要再建立连接，请先断开！", Toast.LENGTH_SHORT).show();
             Log.d("BlueTest","连接已经打开，可以通信。如果要再建立连接，请先断开！");
             return;
         }
@@ -130,7 +86,6 @@ public class TransportData {
                 clientConnectThread.start();
                 BluetoothMsg.isOpen = true;
             } else {
-                //Toast.makeText(mContext, "address is null !", Toast.LENGTH_SHORT).show();
                 Log.d("TransportData","address is null");
             }
         } else if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE) {
@@ -148,14 +103,7 @@ public class TransportData {
             public void run() {
                 shutFlag=true;
                 while(transfering);
-                if (startServerThread != null) {
-                    startServerThread.interrupt();
-                    startServerThread = null;
-                }
-                if (mreadThread != null) {
-                    mreadThread.interrupt();
-                    mreadThread = null;
-                }
+
                 try {
                     if (player_socket != null) {
                         player_socket.close();
@@ -194,14 +142,7 @@ public class TransportData {
             public void run() {
                 shutFlag=true;
                 while(transfering);
-                if (clientConnectThread != null) {
-                    clientConnectThread.interrupt();
-                    clientConnectThread = null;
-                }
-                if (mreadThread != null) {
-                    mreadThread.interrupt();
-                    mreadThread = null;
-                }
+
                 try {
                     if (player_socket != null) {
                         player_socket.close();
@@ -247,13 +188,9 @@ public class TransportData {
         public void run() {
             try {
                 //创建一个Socket连接：只需要服务器在注册时的UUID号
-                // socket = device.createRfcommSocketToServiceRecord(BluetoothProtocols.OBEX_OBJECT_PUSH_PROTOCOL_UUID);
-
-
                 player_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
                 ball_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("C83DA007-3A9F-4249-9A96-18CACE25F84D"));
                 //score_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
-
 
                 Log.d("BlueTest","客户端准备连接");
 
@@ -325,8 +262,7 @@ public class TransportData {
             msgText = PlayerDx/windowWidth + "," ;
         else msgText = mPlayerDx/windowWidth + "," ;
         Log.d("BlueData","已发送:"+msgText);
-        // else
-        //    msgText = mHero.getmAngle() + "," + mHero.getmSpeed()+","+mHero.getScreenX()+","+mHero.getScreenY();
+
         try {
             player_os.write(msgText.getBytes());
             player_os.flush();
@@ -434,6 +370,8 @@ public class TransportData {
 
             }catch (Exception e){
                 Log.d("BlueTest","读取线程异常 ",e);
+            }finally {
+                Log.d("BlueTest","线程已结束: "+this.getId()+"");
             }
 
         }

@@ -82,6 +82,7 @@ public class Single_Game_View extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //获取数据库
         initDB();
+        Log.d("BlueTest","onCreate");
 
         //初始化总GroupView类
         myGroupView = new All_ViewGroup(this);
@@ -162,6 +163,7 @@ public class Single_Game_View extends AppCompatActivity {
                 {
                     if(msg.what == 1)  // handler接收到相关的消息后
                     {
+                        gameView.init();
                         setContentView(myGroupView); // 显示真正的应用界面
                         //ViewCreated=true;
                     }
@@ -359,6 +361,7 @@ public class Single_Game_View extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.d("BlueTest","onRestart");
         if(button_on_off == 1){
             startService(intent);
         }
@@ -367,15 +370,19 @@ public class Single_Game_View extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d("BlueTest","onStop");
+
         stopService(intent);
     }
 
     protected void onDestroy() {
         Log.v("MainActivity", "onDestroy");
-
-        if (BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE)
+        Log.d("BlueTest","onDestroy");
+        if (BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE) {
             TD.closeBluetooth();
-            gameView.isRun = false;
+            BluetoothMsg.serverOrCilent = BluetoothMsg.ServerOrCilent.NONE;
+        }
+        gameView.isRun = false;
         super.onDestroy();
     }
 
