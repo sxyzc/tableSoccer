@@ -72,12 +72,10 @@ public class TransportData {
 
     //开启服务连接
     public void openBluetooth() {
-
         if (BluetoothMsg.isOpen) {
             Log.d("BlueTest","连接已经打开，可以通信。如果要再建立连接，请先断开！");
             return;
         }
-
         if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT) {
             String address = BluetoothMsg.BlueToothAddress;
             if (!address.equals("null")) {
@@ -93,7 +91,6 @@ public class TransportData {
             startServerThread.start();
             BluetoothMsg.isOpen = true;
         }
-
     }
 
     /* 停止服务器 */
@@ -190,21 +187,14 @@ public class TransportData {
                 //创建一个Socket连接：只需要服务器在注册时的UUID号
                 player_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
                 ball_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("C83DA007-3A9F-4249-9A96-18CACE25F84D"));
-                //score_socket = device.createRfcommSocketToServiceRecord(UUID.fromString("54B32C11-45BD-44A2-87BD-4DA72CB8E3EB"));
-
-                Log.d("BlueTest","客户端准备连接");
 
                 player_socket.connect();
                 ball_socket.connect();
-               // score_socket.connect();
-
                 connected2=true;//通
-                Log.d("BlueTest","客户端已连接");
 
                 //启动接受数据
                 mreadThread = new readThread();
                 mreadThread.start();
-
             } catch (IOException e) {
                 Log.e("BlueTest", "客户端连接异常 ", e);
             }
@@ -299,10 +289,9 @@ public class TransportData {
     }
 
     void sendBall(){
-        //写入球数据，按一定格式，方便划分
+        //写入球数据，按一定格式，方便划分，除以屏幕分辨率
         String msgText;
         msgText = ball.x/windowWidth + "," + ball.y/windowHeight+",";
-        //Log.d("BlueData","已发送:"+msgText);
         try {
             ball_os.write(msgText.getBytes());
             ball_os.flush();
@@ -354,15 +343,12 @@ public class TransportData {
                     if(shutFlag)break;
                     //声明目前正在传输数据中
                     transfering=true;
-
                     //Player的数据两边都是互传的
                     sendPlayer();
                     receivePlayer();
-
                     //如果是客户端，需要获得球的数据，服务端则需要传送球的数据
                     if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)receiveBall();
                     else if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE)sendBall();
-
                     //本次传输结束
                     transfering=false;
                 }

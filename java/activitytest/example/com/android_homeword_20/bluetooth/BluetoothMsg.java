@@ -6,11 +6,7 @@ package activitytest.example.com.android_homeword_20.bluetooth;
 
 
 public class BluetoothMsg {
-    /**
-     * 蓝牙连接类型
-     * @author Andy
-     *
-     */
+    //蓝牙连接类型
     public enum ServerOrCilent{
         NONE,
         SERVICE,
@@ -22,5 +18,4 @@ public class BluetoothMsg {
     public static String BlueToothAddress = null,lastblueToothAddress=null;
     //通信线程是否开启
     public static boolean isOpen = false;
-
 }

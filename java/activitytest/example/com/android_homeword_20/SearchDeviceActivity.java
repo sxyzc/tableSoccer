@@ -130,12 +130,11 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
             }
         }
         else{   //Device does not support Bluetooth
-
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setTitle("No bluetooth devices");
-            dialog.setMessage("Your equipment does not support bluetooth, please change device");
+            dialog.setTitle("没有蓝牙设备");
+            dialog.setMessage("您的设备不支持蓝牙");
 
-            dialog.setNegativeButton("cancel",
+            dialog.setNegativeButton("取消",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -160,7 +159,7 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
         if(device.size()>0){ //存在已经配对过的蓝牙设备
             for(Iterator<BluetoothDevice> it=device.iterator();it.hasNext();){
                 BluetoothDevice btd=it.next();
-                //by user0308,if btd has been listed,it shouldn't be listed again
+
                 if(!deviceList.contains((String)(btd.getName()+'\n'+btd.getAddress())))
                     deviceList.add(btd.getName()+'\n'+btd.getAddress());
                 adapter.notifyDataSetChanged();
@@ -212,7 +211,6 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
                 BluetoothDevice btd=intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 //搜索没有配过对的蓝牙设备
                 if (btd.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    //user0308,if an address is in addresslist,it shouldn't appear again
                     if(deviceList.contains((String)(btd.getName()+'\n'+btd.getAddress()))) {
                         ;
                     }
@@ -262,11 +260,9 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
                             BluetoothMsg.lastblueToothAddress=BluetoothMsg.BlueToothAddress;
                         }
 
-                        //进入loading界面
+                        //进入游戏活动界面
                         Intent in=new Intent(SearchDeviceActivity.this, Single_Game_View.class);
                         startActivity(in);
-
-
                     }
                 });
         dialog.setNegativeButton("取消",

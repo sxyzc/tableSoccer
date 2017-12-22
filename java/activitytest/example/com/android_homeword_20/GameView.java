@@ -114,7 +114,7 @@ public class GameView extends View implements Runnable {
         return (float)Math.sqrt((double)((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)));
     }
 
-    //找到离球最近的人     这个要改，改为球前最近的人
+    //找到离球最近的人     这个要改，改为球前最近的人  已改
     private int findNearP(){
         if(ball.myShooted==1){
             float mind = 999999;int mini = 0;
@@ -185,13 +185,11 @@ public class GameView extends View implements Runnable {
 
     //玄学ai，各种速度调整都会影响到ai性能，很容易进入ai死区
     private void aiLogic(){
-        int pos =findNearP();
+        int pos =findNearP();//找前方最近的球员
         if(pos==-1)return;
         Player nearP = PlayerList.get(pos);
         int dir = 1;//1为右，-1为左
         logicDx = (int)PlayerList.get(9).dx;
-        //if(pos>2&&pos<7)logicDx=(logicDx*20/13);
-        //if(pos>6&&pos<9)logicDx=(logicDx*3/4);
 
         float xdis=Math.abs(nearP.x+nearP.dx-ball.x);
         float ydis=Math.abs(nearP.y-ball.y);
@@ -204,20 +202,7 @@ public class GameView extends View implements Runnable {
         else dir=-1;
         if(logicDx>60)dir=-1;
 
-
-                 /*   法一
-                  float dis=nearP.x+nearP.dx-ball.x;
-                 if(Math.abs((double)diss)<1e-3)dir=0;
-                 else if(diss>0)dir=-1;
-                 else dir=1;*/
-                 /*
-                  * 法二
-                  * if(logicDx>0){
-                         if(nearP.x+nearP.dx>ball.x-100)dir=-1;}
-                 else if(nearP.x+nearP.dx>ball.x)dir=-1;*/
-                    //Log.d("aitest", "ai: @@@ "+pos+" "+ball.x+","+ball.y+"  "+(nearP.x+nearP.dx));
-                //Log.d("aitest", "ai: @@@ "+pos+" "+logicDx+","+5*dir);
-
+        //难度控制
         if(diff == 3){
             logicDx += 7 * dir;
         }else if(diff == 2){
@@ -225,29 +210,10 @@ public class GameView extends View implements Runnable {
         }else {
             logicDx += 4 * dir;
         }
-        //速度
 
-        float dx = logicDx;
+        //根据球员总体位置更新各球员位置
+        update_playerDx(PlayerList,logicDx);
 
-        //相减
-        if ((PlayerList.get(0).x + dx > 0) && (PlayerList.get(2).x + dx < MaxRight)) {
-            PlayerList.get(0).update(dx);
-            PlayerList.get(1).update(dx);
-            PlayerList.get(2).update(dx);
-        }
-        if ((PlayerList.get(3).x + dx*15/27 > 0)&&(PlayerList.get(6).x + dx*15/27 < MaxRight)){
-            PlayerList.get(3).update(dx*15/27);
-            PlayerList.get(4).update(dx*15/27);
-            PlayerList.get(5).update(dx*15/27);
-            PlayerList.get(6).update(dx*15/27);
-        }
-        if ((PlayerList.get(7).x + dx*43/27 > 0)&&(PlayerList.get(8).x + dx*43/27 < MaxRight)){
-            PlayerList.get(7).update(dx*43/27);
-            PlayerList.get(8).update(dx*43/27);
-        }
-        if((PlayerList.get(9).x + dx > windowWidth * 3/10)&&(PlayerList.get(9).x + dx < windowWidth * 51/80)){
-            PlayerList.get(9).update(dx);
-        }
     }
 
     // 构造方法
@@ -536,6 +502,7 @@ public class GameView extends View implements Runnable {
     // private int eventY;
     private float dx = 0;
 
+    //根据总体偏移位置，更新各球员偏移位置
     public void update_playerDx(List<Player> player_list,float dx){
         //相减
         if ((player_list.get(0).x + dx > 0) && (player_list.get(2).x + dx < MaxRight)) {
