@@ -377,6 +377,12 @@ public class GameView extends View implements Runnable {
         }
     }
 
+    public void reStart(){
+        new Thread(this).start();
+    }
+
+    private int seTime=0;
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -475,10 +481,16 @@ public class GameView extends View implements Runnable {
                 //ball.changeV(mPlayerList.get());
             }
         }
-
+        if(seTime!=0){seTime++;
+            if(seTime==5)seTime=0;
+        }
         if (colliged) {
             if (music_se == 1) {
-                soundPool.play(soundMap.get(3), 1, 1, 0, 0, 1);
+                if(seTime==0) {
+                    Log.d("seTest",seTime+"     eeeeeeeeeeeeeee");
+                    seTime++;
+                    soundPool.play(soundMap.get(3), 1, 1, 0, 0, 1);
+                }
             }
             ballp.setColor(Color.RED);
         } else ballp.setColor(Color.YELLOW);
@@ -582,5 +594,4 @@ public class GameView extends View implements Runnable {
          }
          return true;
      }
-
 }//线程结束

@@ -36,7 +36,6 @@ public class Single_Game_View extends AppCompatActivity {
     private Left_ViewGroup left_viewGroup;
     private TextView textView0;
     private TextView textView1;
-    private TextView textView2;
     private TextView textView3;
     private TextView textView4;
     private ImageView top;
@@ -77,30 +76,33 @@ public class Single_Game_View extends AppCompatActivity {
     }
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //获取数据库
         initDB();
 
         //初始化总GroupView类
         myGroupView = new All_ViewGroup(this);
+
         //创建游戏View
         gameView = new GameView(this);
 
-        //左侧代码：
+        //左侧模块
         left_viewGroup = new Left_ViewGroup(this);
         textView0 = new TextView(this);
         textView1 = new TextView(this);
-        textView2 = new TextView(this);
         textView3 = new TextView(this);
         textView4 = new TextView(this);
 
+        //初始化计时器
         chronometer = new Chronometer(this);
         chronometer.start();
-
         chronometer.setOnChronometerTickListener(new OnChronometerTickListenerImpl());
 
+        //向左侧GroupView添加子View
         left_viewGroup.addView(textView0,0);
         left_viewGroup.addView(textView1,1);
         left_viewGroup.addView(chronometer,2);
@@ -111,12 +113,15 @@ public class Single_Game_View extends AppCompatActivity {
         top = new ImageView(this);
         top.setBackgroundColor(555555555);
 
+        //下方View
         bottom = new TextView(this);
 
+        //音乐开关、音效开关、暂停开关
         button_music = new Button(this);
         button_se = new Button(this);
         button_pause = new Button(this);
 
+        //向总ViewGroup里添加各个子View
         myGroupView.addView(gameView, 0);
         myGroupView.addView(left_viewGroup, 1);
         myGroupView.addView(top, 2);
@@ -153,7 +158,7 @@ public class Single_Game_View extends AppCompatActivity {
         intent = new Intent(this, activitytest.example.com.android_homeword_20.Service.MyService.class);
         intent.putExtra("number",bgm_sl);
 
-        //获取音乐
+        //音乐按钮初始化
         button_on_off = bgm_st;
         if(button_on_off == 1) {
             button_music.setBackgroundResource(R.drawable.openmusic);
@@ -161,21 +166,24 @@ public class Single_Game_View extends AppCompatActivity {
         }else {
             button_music.setBackgroundResource(R.drawable.closemusic);
         }
-        //获取音效
+        //音效按钮初始化
         button_on_off_se = se;
         if(button_on_off_se == 1){
             button_se.setBackgroundResource(R.drawable.on);
         }else {
             button_se.setBackgroundResource(R.drawable.off);
         }
+        //暂停按钮初始化
+        button_pause.setBackgroundResource(R.drawable.pause);
 
-
+        //初始化背景音乐播放器
         soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
         final HashMap<Integer, Integer> soundMap = new HashMap<Integer, Integer>();
         soundMap.put(1,soundPool.load(this,R.raw.cheer,2));
         soundMap.put(2,soundPool.load(this,R.raw.sigh,2));
         soundMap.put(3,soundPool.load(this,R.raw.kick,1));
 
+        //对对方比分进行监听
         gameView.setMyListener(new GameView.MyListener() {
             @Override
             public void notifyDataChage(int a) {
@@ -186,6 +194,7 @@ public class Single_Game_View extends AppCompatActivity {
             }
         });
 
+        //对己方比分进行监听
         gameView.setListener(new GameView.MyListener() {
             @Override
             public void notifyDataChage(int a) {
@@ -196,6 +205,7 @@ public class Single_Game_View extends AppCompatActivity {
             }
         });
 
+        //对音乐按钮进行监听
         button_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,6 +221,7 @@ public class Single_Game_View extends AppCompatActivity {
             }
         });
 
+        //对音效按钮进行监听
         button_se.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,6 +237,7 @@ public class Single_Game_View extends AppCompatActivity {
             }
         });
 
+        //对暂停按钮进行监听
         button_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +251,7 @@ public class Single_Game_View extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 gameView.isRun = true;
+                                gameView.reStart();
                                 chronometer.setBase(convertStrTimeToLong(chronometer.getText().toString()));
                                 chronometer.start();
                                 startService(intent);
@@ -254,11 +267,13 @@ public class Single_Game_View extends AppCompatActivity {
             }
         });
 
+        //向gameView传入对应的背景音效、背景音乐、游戏难度的参数
         gameView.setMusic_se(button_on_off_se);
         gameView.setKickMusic(soundPool,soundMap);
         gameView.setDiff(diff);
     }
 
+    //对计时器进行监听
     public class OnChronometerTickListenerImpl implements Chronometer.OnChronometerTickListener {
         @Override
         public void onChronometerTick(Chronometer chronometer) {
@@ -323,6 +338,7 @@ public class Single_Game_View extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    //获取数据库
     public void initDB(){
         dbHelper = new MydatabaseHelper(this,"GameRecord.db",null,3);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
