@@ -135,6 +135,7 @@ public class Single_Game_View extends AppCompatActivity {
         if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.NONE)
             setContentView(myGroupView);
         else{
+            setContentView(R.layout.activity_loading);
             TD = new TransportData();
 
             TD.openBluetooth();
@@ -252,6 +253,7 @@ public class Single_Game_View extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 gameView.isRun = true;
                                 gameView.reStart();
+                                TD.reStart();
                                 chronometer.setBase(convertStrTimeToLong(chronometer.getText().toString()));
                                 chronometer.start();
                                 startService(intent);

@@ -319,7 +319,7 @@ public class TransportData {
 
 
     void sendPlayer(){
-        //写入球员dx数据
+        //写入球员dx数据，服务端需要传mPlayerDX（屏幕下方），客户端需要传playerDx（屏幕上方）
         String msgText;
         if(BluetoothMsg.serverOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
             msgText = PlayerDx/windowWidth + "," ;
@@ -335,6 +335,7 @@ public class TransportData {
         }
     }
 
+    //获得球员的信息，即Dx，可以确定球员位置
     void receivePlayer()throws  Exception{
         byte[] buffer = new byte[128];
         int bytes;
@@ -347,6 +348,7 @@ public class TransportData {
             Log.d("BlueData","已接收:"+s);
             String[] z = s.split(",");
 
+            //客户端需要改mPlayerDX（屏幕下方），服务端需要改playerDx（屏幕上方）
             if (z.length > 0 && isDouble(z[0]))
                 if(BluetoothMsg.serverOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
                     mPlayerDx=(float) (Double.parseDouble(z[0]))*windowWidth;
@@ -354,8 +356,14 @@ public class TransportData {
         }
     }
 
+    //继续游戏后需要创建新的读取线程
+    public void reStart(){
+        mreadThread = new readThread();
+        mreadThread.start();
+    }
+
     void sendBall(){
-        //写入球数据
+        //写入球数据，按一定格式，方便划分
         String msgText;
         msgText = ball.x/windowWidth + "," + ball.y/windowHeight+",";
         //Log.d("BlueData","已发送:"+msgText);
@@ -367,6 +375,8 @@ public class TransportData {
         }
     }
 
+
+    //获取球的信息
     void receiveBall()throws Exception{
         // Read from the InputStream
         byte[] buffer = new byte[128];
@@ -377,9 +387,9 @@ public class TransportData {
                 buf_data[i] = buffer[i];
             }
             String s = new String(buf_data);
-            //Log.d("BlueData","已接收:"+s);
             String[] z = s.split(",");
-            //if(BluetoothMsg.serviceOrCilent==BluetoothMsg.ServerOrCilent.CILENT)
+
+            //得到的数据乘分辨率，进行屏幕适配
             if (z.length > 0 && isDouble(z[0]))
                 ball.x=(float) (Double.parseDouble(z[0]))*windowWidth;
             if (z.length > 1 && isDouble(z[1]))
@@ -395,21 +405,29 @@ public class TransportData {
             Log.d("BlueTest","读取线程启动");
 
             try {
+                //打开输入输出流
                 ball_is = ball_socket.getInputStream();
                 ball_os = ball_socket.getOutputStream();
                 player_is = player_socket.getInputStream();
                 player_os = player_socket.getOutputStream();
+                //忙等待至gameView创建完成
                 while(!ViewCreated);
-                while(true){
-                    while(!isRun);
+                while(true&&isRun){
+                    Log.d("BlueTest","传输数据中，线程："+this.getId());
+                    //如果蓝牙关闭，退出线程
                     if(shutFlag)break;
+                    //声明目前正在传输数据中
                     transfering=true;
 
+                    //Player的数据两边都是互传的
                     sendPlayer();
                     receivePlayer();
+
+                    //如果是客户端，需要获得球的数据，服务端则需要传送球的数据
                     if(BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.CILENT)receiveBall();
                     else if (BluetoothMsg.serverOrCilent == BluetoothMsg.ServerOrCilent.SERVICE)sendBall();
 
+                    //本次传输结束
                     transfering=false;
                 }
 
