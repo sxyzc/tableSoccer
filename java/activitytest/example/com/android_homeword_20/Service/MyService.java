@@ -35,6 +35,7 @@ public class MyService extends Service {
                 mediaPlayer = MediaPlayer.create(this, R.raw.background_music3);
             }
             mediaPlayer.setLooping(true);
+            mediaPlayer.setVolume(0.08f,0.08f);
             mediaPlayer.start();
         }
         return super.onStartCommand(intent, flags, startId);

@@ -20,28 +20,33 @@ public class All_ViewGroup extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         //设置gameView的位置
         View temp = getChildAt(0);
-        temp.layout(MainActivity.windowWidth/5, MainActivity.windowHeight/10, MainActivity.windowWidth, MainActivity.windowHeight*9/10);
+        temp.layout(MainActivity.windowWidth/10, MainActivity.windowHeight*3/20, MainActivity.windowWidth*9/10, MainActivity.windowHeight*19/20);
 
-        //左边的比分View
+        //时间
         temp = getChildAt(1);
-        temp.layout(0,0, MainActivity.windowWidth/5, MainActivity.windowHeight);
+        temp.layout(MainActivity.windowWidth*3/10,0, MainActivity.windowWidth*7/10, MainActivity.windowHeight*3/40);
 
-        //上面的背景View
+
         temp = getChildAt(2);
-        temp.layout(MainActivity.windowWidth*4/5,0, MainActivity.windowWidth, MainActivity.windowHeight/10);
+        temp.layout(MainActivity.windowWidth/20,0, MainActivity.windowWidth*3/20, MainActivity.windowHeight*3/40);
 
-        //下面的背景View
         temp = getChildAt(3);
-        temp.layout(MainActivity.windowWidth/5, MainActivity.windowHeight*9/10, MainActivity.windowWidth, MainActivity.windowHeight);
+        temp.layout(MainActivity.windowWidth/5,0, MainActivity.windowWidth*3/10, MainActivity.windowHeight*3/40);
 
         temp = getChildAt(4);
-        temp.layout(MainActivity.windowWidth/5,0, MainActivity.windowWidth*2/5, MainActivity.windowHeight/10);
+        temp.layout(MainActivity.windowWidth*4/5,0, MainActivity.windowWidth*9/10, MainActivity.windowHeight*3/40);
 
         temp = getChildAt(5);
-        temp.layout(MainActivity.windowWidth*2/5,0, MainActivity.windowWidth*3/5, MainActivity.windowHeight/10);
+        temp.layout(MainActivity.windowWidth*11/20,MainActivity.windowHeight*3/40, MainActivity.windowWidth*6/10, MainActivity.windowHeight*3/20);
 
         temp = getChildAt(6);
-        temp.layout(MainActivity.windowWidth*3/5,0, MainActivity.windowWidth*4/5, MainActivity.windowHeight/10);
+        temp.layout(MainActivity.windowWidth*4/10,MainActivity.windowHeight*3/40, MainActivity.windowWidth*9/20, MainActivity.windowHeight*3/20);
+
+        temp = getChildAt(7);
+        temp.layout(0,MainActivity.windowHeight*3/40, MainActivity.windowWidth*4/10, MainActivity.windowHeight*3/20);
+
+        temp = getChildAt(8);
+        temp.layout(MainActivity.windowWidth*6/10,MainActivity.windowHeight*3/40, MainActivity.windowWidth, MainActivity.windowHeight*3/20);
     }
 
     @Override

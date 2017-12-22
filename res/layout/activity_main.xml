@@ -5,15 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
+<!--    tools:context="com.example.lenovo.start.MainActivity"-->
+
 
     <Button
         android:onClick="start_game"
-        android:layout_width="130sp"
+        android:id="@+id/doublebutton"
+        android:layout_width="120sp"
         android:layout_height="50sp"
         android:layout_marginBottom="116dp"
         android:backgroundTint="?android:attr/colorPressedHighlight"
-        android:text="@string/start_game"
-        android:textSize="18dp"
+        android:text="单机游戏"
+        android:textSize="20dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,13 +27,13 @@
         tools:layout_constraintRight_creator="1" />
 
     <Button
-        android:onClick="bluetooth_game"
-        android:layout_width="130sp"
+        android:layout_width="120sp"
         android:layout_height="50sp"
         android:layout_marginBottom="116dp"
         android:backgroundTint="?android:attr/colorPressedHighlight"
-        android:text="@string/bluetooth_game"
-        android:textSize="18dp"
+        android:text="双人游戏"
+        android:textSize="20dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,12 +44,13 @@
 
     <Button
         android:onClick="setting"
-        android:layout_width="130sp"
+        android:layout_width="120sp"
         android:layout_height="50sp"
         android:layout_marginBottom="116dp"
         android:backgroundTint="?android:attr/colorPressedHighlight"
-        android:text="@string/setting"
-        android:textSize="18dp"
+        android:text="设置"
+        android:textSize="20dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,11 +61,12 @@
 
     <Button
         android:onClick="data_"
-        android:layout_width="130sp"
+        android:layout_width="120sp"
         android:layout_height="50sp"
         android:backgroundTint="?android:attr/colorPressedHighlight"
-        android:text="@string/data"
-        android:textSize="18dp"
+        android:text="个人纪录"
+        android:textSize="20dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
