@@ -126,7 +126,11 @@ public class Single_Game_View extends AppCompatActivity {
         player.setGravity(Gravity.CENTER);
         player.setTextColor(Color.WHITE);
         player.setTextSize(30);
-        system.setText("System");
+        if(BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE){
+            system.setText("Player2");
+        }else {
+            system.setText("System");
+        }
         system.setGravity(Gravity.CENTER);
         system.setTextColor(Color.WHITE);
         system.setTextSize(30);
@@ -312,43 +316,84 @@ public class Single_Game_View extends AppCompatActivity {
             if(gameTime_.equals(time_)){//判断什么时候比赛结束
                 int mScore = gameView.getmScore();
                 int Score = gameView.getScore();
-                if (mScore > Score){
-                    new AlertDialog.Builder(Single_Game_View.this)
-                            .setTitle("游戏结束")
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Single_Game_View.this.finish();
-                                }
-                            })
-                            .setMessage("You win")
-                            .show();
-                }else if(mScore == Score){
-                    new AlertDialog.Builder(Single_Game_View.this)
-                            .setTitle("游戏结束")
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Single_Game_View.this.finish();
-                                }
-                            })
-                            .setMessage("Ended in a draw")
-                            .show();
+                if(BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.CILENT){
+                    if (mScore > Score){
+                        new AlertDialog.Builder(Single_Game_View.this)
+                                .setTitle("游戏结束")
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Single_Game_View.this.finish();
+                                    }
+                                })
+                                .setMessage("You win")
+                                .show();
+                    }else if(mScore == Score){
+                        new AlertDialog.Builder(Single_Game_View.this)
+                                .setTitle("游戏结束")
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Single_Game_View.this.finish();
+                                    }
+                                })
+                                .setMessage("Ended in a draw")
+                                .show();
+                    }else {
+                        new AlertDialog.Builder(Single_Game_View.this)
+                                .setTitle("游戏结束")
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Single_Game_View.this.finish();
+                                    }
+                                })
+                                .setMessage("You lost")
+                                .show();
+                    }
                 }else {
-                    new AlertDialog.Builder(Single_Game_View.this)
-                            .setTitle("游戏结束")
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Single_Game_View.this.finish();
-                                }
-                            })
-                            .setMessage("You lost")
-                            .show();
+                    if (mScore < Score){
+                        new AlertDialog.Builder(Single_Game_View.this)
+                                .setTitle("游戏结束")
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Single_Game_View.this.finish();
+                                    }
+                                })
+                                .setMessage("You win")
+                                .show();
+                    }else if(mScore == Score){
+                        new AlertDialog.Builder(Single_Game_View.this)
+                                .setTitle("游戏结束")
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Single_Game_View.this.finish();
+                                    }
+                                })
+                                .setMessage("Ended in a draw")
+                                .show();
+                    }else {
+                        new AlertDialog.Builder(Single_Game_View.this)
+                                .setTitle("游戏结束")
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Single_Game_View.this.finish();
+                                    }
+                                })
+                                .setMessage("You lost")
+                                .show();
+                    }
                 }
+
                 //比赛结束后，
                 gameView.isRun =false;
                 chronometer.stop();
@@ -380,8 +425,8 @@ public class Single_Game_View extends AppCompatActivity {
         Log.d("BlueTest","onDestroy");
         if (BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE) {
             TD.closeBluetooth();
-            BluetoothMsg.serverOrCilent = BluetoothMsg.ServerOrCilent.NONE;
-        }
+           // BluetoothMsg.serverOrCilent = BluetoothMsg.ServerOrCilent.NONE;
+    }
         gameView.isRun = false;
         super.onDestroy();
     }

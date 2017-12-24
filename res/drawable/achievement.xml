@@ -2,6 +2,6 @@
 <level-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/bronz" android:minLevel="50" android:maxLevel="100"></item>
     <item android:drawable="@drawable/silver" android:minLevel="101" android:maxLevel="200"></item>
-    <item android:drawable="@drawable/gold" android:minLevel="201"></item>
+    <item android:drawable="@drawable/gold" android:minLevel="201" android:maxLevel="10000"></item>
 
 </level-list>

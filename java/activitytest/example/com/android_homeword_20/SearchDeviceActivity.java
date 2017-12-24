@@ -27,6 +27,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import static activitytest.example.com.android_homeword_20.Single_Game_View.TD;
+
 public class SearchDeviceActivity extends Activity implements OnItemClickListener{
 
     private BluetoothAdapter blueadapter=null;
@@ -108,6 +110,9 @@ public class SearchDeviceActivity extends Activity implements OnItemClickListene
             unregisterReceiver(mydevice);
         }
         super.onDestroy();
+        if (BluetoothMsg.serverOrCilent != BluetoothMsg.ServerOrCilent.NONE) {
+            BluetoothMsg.serverOrCilent = BluetoothMsg.ServerOrCilent.NONE;
+        }
     }
     /**
      * Setting Up Bluetooth

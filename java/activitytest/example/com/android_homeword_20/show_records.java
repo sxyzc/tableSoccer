@@ -52,18 +52,18 @@ public class show_records extends Activity {
         TextView text7 = (TextView)findViewById(R.id.textView12);
         ImageView achievement = (ImageView)findViewById(R.id.imageView);
         text1.setText("单场次最高分："+i1);
-        text2.setText("总进球数："+i2);
+        text2.setText("总进球数："+ i2);
         text3.setText("总游玩场次："+i3);
         text4.setText("总失败场次："+i5);
         text5.setText("总胜利场次："+i4);
         text6.setText("总平局场次："+i6);
         LevelListDrawable levelListDrawable = (LevelListDrawable)achievement.getDrawable();
         levelListDrawable.setLevel(total_point);
-        if(total_point>=0||total_point<50){
+        if(total_point>=0&&total_point<50){
             text7.setText("暂无称号");
-        }else if(total_point>49||total_point<101){
+        }else if(total_point>49&&total_point<101){
             text7.setText("青铜射手");
-        }else if(total_point>100||total_point<201){
+        }else if(total_point>100&&total_point<201){
             text7.setText("白银射手");
         }else {
             text7.setText("黄金射手");
