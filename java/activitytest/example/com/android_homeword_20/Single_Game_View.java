@@ -125,11 +125,11 @@ public class Single_Game_View extends AppCompatActivity {
         player.setText("Player");
         player.setGravity(Gravity.CENTER);
         player.setTextColor(Color.WHITE);
-        player.setTextSize(40);
+        player.setTextSize(30);
         system.setText("System");
         system.setGravity(Gravity.CENTER);
         system.setTextColor(Color.WHITE);
-        system.setTextSize(40);
+        system.setTextSize(30);
 
         //向总ViewGroup里添加各个子View
         myGroupView.addView(gameView, 0);
@@ -425,9 +425,6 @@ public class Single_Game_View extends AppCompatActivity {
         values.clear();
         cursor.moveToFirst();
         if(mScore > Score){
-            //加上进了几个球
-            //丢了几个球
-            //胜场数++
             int num_of_win_stage = cursor.getInt(cursor.getColumnIndex("num_of_win_stage"));
             values.put("num_of_win_stage",num_of_win_stage+1);
             db.update("Record",values,null,null);

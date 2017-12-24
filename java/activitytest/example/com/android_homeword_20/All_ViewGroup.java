@@ -26,7 +26,6 @@ public class All_ViewGroup extends ViewGroup {
         temp = getChildAt(1);
         temp.layout(MainActivity.windowWidth*3/10,0, MainActivity.windowWidth*7/10, MainActivity.windowHeight*3/40);
 
-
         temp = getChildAt(2);
         temp.layout(MainActivity.windowWidth/20,0, MainActivity.windowWidth*3/20, MainActivity.windowHeight*3/40);
 

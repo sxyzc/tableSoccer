@@ -68,8 +68,6 @@ public class show_records extends Activity {
         }else {
             text7.setText("黄金射手");
         }
-
-
     }
 
     public void back(View v) {
